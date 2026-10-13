@@ -1,0 +1,317 @@
+/* Colores de la marca en variables, así si el dueño quiere otro tono lo cambio acá y listo */
+:root {
+  --crema: #f6f1e6;
+  --papel: #fffdf8;
+  --verde: #1f4a2c;
+  --hoja: #2f6b3a;
+  --tomate: #d9472b;
+  --tinta: #1d1a14;
+  --gris: #6b665b;
+  --linea: #e4dccb;
+  --wsp: #1fa855;
+  --radio: 18px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--crema);
+  color: var(--tinta);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+/* BlurText viene pensado para Tailwind y usa esta clase, la defino a mano */
+.inline-block { display: inline-block; }
+
+/* ---------- fondo de manchas (MetaBalls) ----------
+   Lo dejo fijo y del tamaño de la pantalla, así las manchas siempre se ven detrás
+   mientras bajas por el catálogo. pointer-events: none para que no tape ningún botón
+   (igual sigue al mouse, porque MetaBalls escucha el mouse en toda la ventana) */
+.fondo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+/* el zoom: agrando el lienzo un 20% desde el centro y lo que sobra se recorta,
+   así las manchas se ven más grandes y más cerca */
+.fondo__manchas { transform: scale(1.2); transform-origin: center; }
+/* así el contenido queda encima del fondo */
+#root { position: relative; isolation: isolate; }
+
+/* ---------- chispas (ClickSpark) ---------- */
+/* el ClickSpark trae height: 100% en línea; en la tarjeta lo dejo a su altura natural y lo empujo abajo */
+.producto__accion { margin-top: auto; height: auto !important; }
+.oferta__chispa .oferta { width: 100%; height: 100%; }
+
+/* ---------- botones ---------- */
+.btn {
+  border: 0; border-radius: 999px; padding: 0.75rem 1.3rem;
+  font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: transform 0.15s, background 0.15s;
+}
+.btn:active { transform: scale(0.97); }
+.btn--primario { background: var(--verde); color: var(--crema); }
+.btn--primario:hover { background: var(--hoja); }
+.btn--fantasma { border: 1.5px solid var(--verde); color: var(--verde); }
+.btn--carrito { background: var(--tinta); color: var(--crema); padding: 0.55rem 1.1rem; }
+.btn--wsp { width: 100%; justify-content: center; background: var(--wsp); color: #fff; padding: 0.9rem; }
+.btn--wsp:disabled { background: #b9c3b5; cursor: not-allowed; }
+.btn-icono { border: 0; background: none; padding: 0.4rem; color: var(--gris); }
+.link { border: 0; background: none; color: var(--tomate); padding: 0; text-decoration: underline; font-size: 0.9rem; }
+.burbuja {
+  background: var(--tomate); color: #fff; border-radius: 999px;
+  min-width: 1.4rem; height: 1.4rem; font-size: 0.8rem; display: grid; place-items: center;
+}
+
+/* ---------- nav ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.8rem clamp(1rem, 4vw, 3rem);
+  background: color-mix(in srgb, var(--crema) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--linea);
+}
+.marca { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
+
+/* ---------- hero ---------- */
+.hero {
+  display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; gap: 2rem;
+  padding: clamp(2.5rem, 7vw, 5.5rem) clamp(1rem, 4vw, 3rem) 3rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.hero__kicker { text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.78rem; font-weight: 700; color: var(--tomate); margin: 0 0 1rem; }
+.hero__titulo {
+  font-family: 'Fraunces', serif; font-weight: 600;
+  font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: 1.02; letter-spacing: -0.03em;
+  color: var(--verde); margin: 0;
+}
+.hero__bajada { font-size: 1.1rem; line-height: 1.55; color: var(--gris); max-width: 32rem; margin: 1.3rem 0 1.8rem; }
+.hero__acciones { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+/* El sello con el CircularText: piso los estilos que trae por defecto (blanco y 200px) */
+.sello { position: relative; display: grid; place-items: center; }
+.sello::before {
+  content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+  background: radial-gradient(circle, #f3c9a3 0%, #f0dcc0 55%, transparent 72%);
+}
+.circular-text.sello__texto { width: 260px; height: 260px; color: var(--verde); }
+.circular-text.sello__texto span { font-size: 17px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em; }
+/* foto redonda de la canasta al centro del CircularText */
+.sello__centro {
+  position: absolute; width: 150px; height: 150px; border-radius: 50%;
+  object-fit: cover; pointer-events: none;
+  box-shadow: 0 10px 30px -12px rgba(31, 74, 44, 0.45);
+}
+
+/* ---------- ofertas ---------- */
+.ofertas { max-width: 1200px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 3rem) 2.5rem; }
+.ofertas h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+.ofertas__fila { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.9rem; }
+.oferta {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; column-gap: 0.8rem;
+  text-align: left; background: var(--tomate); color: #fff; border: 0; border-radius: var(--radio);
+  padding: 1rem; transition: transform 0.15s;
+}
+.oferta:hover { transform: translateY(-3px) rotate(-0.5deg); }
+.oferta__foto {
+  grid-row: span 3; align-self: center; width: 58px; height: 58px; border-radius: 50%;
+  object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.85); font-size: 2rem;
+}
+.oferta__nombre { font-weight: 700; }
+.oferta__precio { font-size: 1.15rem; font-weight: 700; }
+.oferta__precio s { opacity: 0.7; font-weight: 400; font-size: 0.9rem; }
+.oferta__mas { font-size: 0.8rem; opacity: 0.9; }
+
+/* ---------- catálogo ---------- */
+.catalogo { max-width: 1200px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 3rem) 3rem; }
+.catalogo__top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.catalogo__top h2 { font-size: 1.6rem; }
+.buscador {
+  flex: 1; max-width: 320px; min-width: 200px; padding: 0.65rem 1rem; border-radius: 999px;
+  border: 1.5px solid var(--linea); background: var(--papel); outline: none;
+}
+.buscador:focus { border-color: var(--hoja); }
+.filtros { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.4rem; margin-bottom: 1.4rem; }
+.filtro {
+  white-space: nowrap; border: 1.5px solid var(--linea); background: var(--papel);
+  border-radius: 999px; padding: 0.45rem 1rem; font-size: 0.92rem;
+}
+.filtro--on { background: var(--verde); border-color: var(--verde); color: var(--crema); }
+.grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
+.sin-resultados { color: var(--gris); padding: 2rem 0; }
+
+/* ---------- tarjeta de producto (FlipCard) ---------- */
+/* El FlipCard pide un ancho y alto fijos en px. Yo le pongo ancho 100% para que llene la
+   columna de la grilla, y un alto fijo porque las dos caras tienen que medir lo mismo */
+.flip-card.producto-flip { display: block; width: 100%; height: 340px; }
+/* que la tarjeta que estás tocando quede encima de las vecinas, así no se tapan las chispas */
+.flip-card.producto-flip:hover,
+.flip-card.producto-flip:focus-within { z-index: 2; }
+.flip-card.producto-flip:focus-visible { outline: 2px solid var(--hoja); outline-offset: 3px; }
+/* la cara trae overflow: hidden y eso cortaba las chispas en el borde; el brillo lo redondeo aparte */
+.producto-flip .flip-card__face { overflow: visible; border: 1px solid var(--linea); }
+.producto-flip .flip-card__glare { border-radius: inherit; }
+
+.cara {
+  position: absolute; inset: 0; padding: 1.1rem;
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.cara--agotado > :not(.chip):not(.girar) { opacity: 0.5; }
+/* flechita en la esquina para que se entienda que la tarjeta se da vuelta */
+.girar {
+  position: absolute; top: 0.7rem; right: 0.8rem; color: var(--gris);
+  font-size: 1rem; line-height: 1; transition: transform 0.3s;
+}
+.producto-flip:hover .girar { transform: rotate(180deg); color: var(--hoja); }
+.producto__pronto { margin: auto 0 0; text-align: center; font-size: 0.85rem; color: var(--gris); padding: 0.75rem 0; }
+
+/* reverso: fondo verde para que se note el cambio de cara */
+.cara--reverso { background: var(--verde); color: var(--crema); border-radius: inherit; gap: 0.4rem; }
+.reverso__foto { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--crema); font-size: 1.4rem; }
+.reverso__texto { margin: 0; font-size: 0.9rem; line-height: 1.4; color: color-mix(in srgb, var(--crema) 88%, transparent); }
+.reverso__datos { margin: 0.3rem 0 0; display: grid; gap: 0.5rem; }
+.reverso__datos dt { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #f3c9a3; }
+.reverso__datos dd { margin: 0.1rem 0 0; font-size: 0.85rem; line-height: 1.35; }
+.reverso__volver { margin-top: auto; font-size: 0.78rem; opacity: 0.75; }
+/* la foto llega hasta los bordes de arriba de la tarjeta: le pongo margen negativo
+   igual al padding de .cara, y la redondeo arriba igual que la tarjeta */
+.producto__foto {
+  display: block; width: calc(100% + 2.2rem); height: 130px; margin: -1.1rem -1.1rem 0.6rem;
+  object-fit: cover; border-radius: 17px 17px 0 0; background: var(--linea); font-size: 3rem;
+}
+/* si la foto no carga queda el emoji centrado, con el mismo tamaño que la foto */
+.foto--emoji { display: grid; place-items: center; background: var(--crema); line-height: 1; }
+.producto__nombre { font-size: 1.15rem; }
+.producto__nota { margin: 0; color: var(--gris); font-size: 0.85rem; }
+.producto__precio { margin: 0.3rem 0 0.8rem; display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
+.producto__precio s { color: var(--gris); font-size: 0.85rem; }
+.producto__precio strong { font-size: 1.2rem; }
+.producto__precio span { color: var(--gris); font-size: 0.85rem; }
+.chip {
+  position: absolute; top: 0.8rem; left: 0.8rem; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; padding: 0.25rem 0.6rem; border-radius: 999px;
+}
+.chip--oferta { background: var(--tomate); color: #fff; }
+.chip--no { background: var(--tinta); color: var(--crema); }
+.stepper {
+  margin-top: auto; display: flex; justify-content: space-between; align-items: center;
+  border: 1.5px solid var(--verde); border-radius: 999px; padding: 0.2rem;
+}
+.stepper button {
+  width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 0;
+  background: var(--verde); color: var(--crema); font-size: 1.2rem; line-height: 1;
+  transition: transform 0.15s, background 0.15s;
+}
+.stepper button:active { transform: scale(0.9); }
+.stepper button:disabled { background: var(--linea); color: var(--gris); cursor: default; }
+/* uso > span para no pisar el span interno del ClickSpark */
+.stepper > span { font-weight: 600; font-size: 0.95rem; }
+/* cuando está en 0 el borde y el número quedan más suaves, así se nota qué está en el pedido */
+.stepper--vacio { border-color: var(--linea); }
+.stepper--vacio > span { color: var(--gris); font-weight: 400; }
+/* el ClickSpark trae width y height 100% en línea; acá lo dejo del tamaño del botón + */
+.mas-chispa { width: auto !important; height: auto !important; display: flex; }
+
+/* ---------- cómo funciona ---------- */
+.como {
+  /* le resto el padding lateral para que quede alineado con el catálogo */
+  max-width: calc(1200px - 2 * clamp(1rem, 4vw, 3rem)); margin: 0 auto 3rem; padding: 2.2rem clamp(1.2rem, 3vw, 2.5rem);
+  background: var(--verde); color: var(--crema); border-radius: 28px;
+  width: calc(100% - 2 * clamp(1rem, 4vw, 3rem));
+}
+.como h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+.como ol { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem 2rem; line-height: 1.5; }
+
+/* ---------- pie ---------- */
+.pie {
+  display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  padding: 2rem clamp(1rem, 4vw, 3rem) 6rem; border-top: 1px solid var(--linea); color: var(--gris);
+}
+.pie p { margin: 0.2rem 0; }
+.pie strong { color: var(--tinta); font-family: 'Fraunces', serif; font-size: 1.1rem; }
+.pie__links { display: flex; gap: 1.2rem; }
+.pie__links a { color: var(--verde); font-weight: 600; }
+
+/* ---------- botón flotante (más que nada para celular) ---------- */
+.flotante {
+  position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 25;
+  border: 0; border-radius: 999px; padding: 0.9rem 1.5rem; font-weight: 700;
+  background: var(--tomate); color: #fff; box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+/* ---------- carrito (panel lateral) ---------- */
+.velo { position: fixed; inset: 0; background: rgba(29, 26, 20, 0.4); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 30; }
+.velo--on { opacity: 1; pointer-events: auto; }
+.carrito {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100%); z-index: 40;
+  background: var(--papel); display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.carrito--on { transform: none; }
+.carrito__top { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--linea); }
+.carrito__vacio { padding: 2rem 1.3rem; color: var(--gris); flex: 1; }
+.carrito__cuerpo { flex: 1; overflow-y: auto; padding: 1rem 1.3rem; }
+.carrito__lista { list-style: none; margin: 0 0 0.6rem; padding: 0; }
+.carrito__lista li {
+  display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 0.6rem;
+  padding: 0.2rem 0; border-bottom: 1px dashed var(--linea);
+}
+.carrito__lista small { display: block; color: var(--gris); }
+/* el SpringCheck ocupa el espacio que sobra y corta el nombre si es muy largo */
+.carrito__check { min-width: 0; }
+.carrito__cant { white-space: nowrap; font-size: 0.85rem; min-width: 3.4rem; text-align: center; }
+/* el contador del pedido es una versión chica del de las tarjetas */
+.mini-stepper {
+  display: flex; align-items: center; gap: 0.2rem;
+  border: 1.5px solid var(--linea); border-radius: 999px; padding: 0.15rem;
+}
+.mini-stepper button {
+  width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 0; line-height: 1;
+  background: var(--verde); color: var(--crema); font-size: 1rem;
+  transition: transform 0.15s;
+}
+.mini-stepper button:active { transform: scale(0.9); }
+.mini-stepper .carrito__cant { color: var(--tinta); font-weight: 600; }
+.carrito__precio { font-variant-numeric: tabular-nums; font-weight: 600; transition: opacity 0.2s; }
+/* cuando lo marcas, la cantidad y el precio también se apagan, igual que el nombre tachado */
+.revisado .carrito__cant, .revisado .carrito__precio { opacity: 0.45; }
+.carrito__revisados { margin: 0 0 0.3rem; font-size: 0.82rem; color: var(--gris); }
+.form { display: grid; gap: 0.8rem; margin-top: 1.2rem; }
+.form label { display: grid; gap: 0.3rem; font-size: 0.88rem; font-weight: 600; }
+.form em { font-weight: 400; color: var(--gris); }
+.form input, .form select, .form textarea {
+  padding: 0.65rem 0.8rem; border-radius: 12px; border: 1.5px solid var(--linea);
+  background: #fff; font-weight: 400; outline: none;
+}
+.form input:focus, .form select:focus, .form textarea:focus { border-color: var(--hoja); }
+.carrito__pie { padding: 1rem 1.3rem 1.3rem; border-top: 1px solid var(--linea); display: grid; gap: 0.35rem; }
+.fila { display: flex; justify-content: space-between; color: var(--gris); }
+.fila--total { color: var(--tinta); font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem; }
+.aviso { margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--tomate); }
+
+/* ---------- celular ---------- */
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; text-align: left; }
+  .sello { order: -1; }
+  .sello::before, .circular-text.sello__texto { width: 200px; height: 200px; }
+  .circular-text.sello__texto span { font-size: 14px; }
+  .sello__centro { width: 115px; height: 115px; }
+  .grilla, .ofertas__fila { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+  .producto__foto { height: 105px; width: calc(100% + 1.8rem); margin: -0.9rem -0.9rem 0.5rem; }
+  /* en el celular las columnas son angostas, así que le doy un poco más de alto para el reverso */
+  .flip-card.producto-flip { height: 330px; }
+  .cara { padding: 0.9rem; }
+  .reverso__texto { font-size: 0.82rem; }
+  .reverso__datos dd { font-size: 0.78rem; }
+  .buscador { max-width: none; }
+}
+
+/* la fotito redonda al lado del nombre en "Tu pedido" */
+.carrito__item { display: inline-flex; align-items: center; gap: 0.5rem; }
+.carrito__foto { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex: none; font-size: 1.1rem; }
+/* la flechita de girar va encima de la foto, así que le pongo un fondo para que se lea */
+.girar { background: rgba(255, 253, 248, 0.92); border-radius: 50%; width: 1.7rem; height: 1.7rem; display: grid; place-items: center; z-index: 1; }
+.chip { z-index: 1; }
