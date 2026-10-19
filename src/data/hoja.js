@@ -9,7 +9,7 @@ import { CATEGORIAS, PRODUCTOS } from './productos';
 // El ID de la planilla va en el .env (VITE_SHEET_ID). Si no está, uso los productos de
 // productos.js, así puedo seguir trabajando en local sin internet.
 // Si no hay .env uso este. No es secreto: la planilla igual está compartida como "solo lector"
-const ID_PLANILLA = '';
+const ID_PLANILLA = '1gB51GQeOhTxFszAMm0k9TYHO5sMro7hCcNBaciHwVLs';
 const SHEET_ID = import.meta.env.VITE_SHEET_ID || ID_PLANILLA;
 const HOJA = import.meta.env.VITE_SHEET_TAB || 'Productos';
 const CLAVE_CACHE = 'productos-verduleria';
