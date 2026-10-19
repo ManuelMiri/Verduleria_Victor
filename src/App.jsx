@@ -7,7 +7,7 @@ import { CHISPAS } from './chispas';
 import ProductoCard from './components/ProductoCard';
 import Foto, { fotoUrl } from './components/Foto';
 import Carrito from './components/Carrito';
-import { CATEGORIAS, PRODUCTOS } from './data/productos';
+import { categoriasDe, useProductos } from './data/hoja';
 import { TIENDA } from './data/tienda';
 import { clp } from './utils';
 import './App.css';
@@ -27,6 +27,9 @@ export default function App() {
   const [categoria, setCategoria] = useState('Todo');
   const [busqueda, setBusqueda] = useState('');
   const [abierto, setAbierto] = useState(false);
+  // los productos ahora vienen de la planilla de Google (ver data/hoja.js)
+  const { productos, cargando } = useProductos();
+  const categorias = useMemo(() => categoriasDe(productos), [productos]);
 
   useEffect(() => {
     try {
@@ -46,17 +49,17 @@ export default function App() {
     });
   };
 
-  const items = PRODUCTOS.filter((p) => carrito[p.id]).map((p) => ({ producto: p, cantidad: carrito[p.id] }));
-  const ofertas = PRODUCTOS.filter((p) => p.oferta && p.hayHoy);
+  const items = productos.filter((p) => carrito[p.id]).map((p) => ({ producto: p, cantidad: carrito[p.id] }));
+  const ofertas = productos.filter((p) => p.oferta && p.hayHoy);
 
   // Filtro por categoría y por lo que escriban en el buscador (sin importar tildes)
   const visibles = useMemo(() => {
     const limpiar = (t) => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
     const q = limpiar(busqueda);
-    return PRODUCTOS.filter(
+    return productos.filter(
       (p) => (categoria === 'Todo' || p.categoria === categoria) && limpiar(p.nombre).includes(q)
     );
-  }, [categoria, busqueda]);
+  }, [productos, categoria, busqueda]);
 
   const cantidadItems = items.length;
 
@@ -162,14 +165,16 @@ export default function App() {
         </div>
 
         <div className="filtros" role="tablist">
-          {CATEGORIAS.map((c) => (
+          {categorias.map((c) => (
             <button key={c} className={`filtro ${c === categoria ? 'filtro--on' : ''}`} onClick={() => setCategoria(c)}>
               {c}
             </button>
           ))}
         </div>
 
-        {visibles.length === 0 ? (
+        {cargando ? (
+          <p className="sin-resultados">Cargando los productos de hoy…</p>
+        ) : visibles.length === 0 ? (
           <p className="sin-resultados">No encontramos "{busqueda}". Pregúntanos por WhatsApp, quizás llegó hoy.</p>
         ) : (
           <div className="grilla">

@@ -12,7 +12,7 @@ npm run dev
 ## Qué cambiar antes de mostrársela al dueño
 
 - `src/data/tienda.js`: nombre, WhatsApp, dirección, horario, sectores de despacho y pedido mínimo.
-- `src/data/productos.js`: productos, precios, ofertas, si hay o no hay hoy y la descripción de atrás de cada tarjeta.
+- Los productos, precios, ofertas y el "¿Hay hoy?" salen de la planilla de Google (ver abajo). `src/data/productos.js` queda solo de respaldo.
 - Las fotos son de Unsplash (banco gratis, sin pagar ni pedir permiso) y van enlazadas con el campo `foto` de cada producto. Si una foto no carga, aparece el emoji. La idea es cambiarlas por fotos reales del local.
 
 ## Componentes de React Bits que usé
@@ -31,9 +31,24 @@ Están copiados en `src/components/reactbits/`. Se pueden agregar más con
 
 `npm run build` y subir la carpeta `dist/` a Cloudflare Pages o Vercel.
 
+## Productos desde la planilla de Google
+
+La página lee la planilla `Productos-Fruteria-don-Vic` cada vez que se abre (y cuando vuelves a la pestaña).
+
+1. En la planilla: **Compartir → Acceso general → Cualquier persona con el enlace → Lector**.
+2. Copia el ID del link (`https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit`).
+3. Crea un archivo `.env` (puedes copiar `.env.example`) con `VITE_SHEET_ID=ese_id`.
+4. `npm run build` o `npm run deploy`. El ID queda metido en el build, así que si cambias de planilla hay que volver a publicar.
+
+Las columnas tienen que seguir en este orden (A..L): Nombre, Categoría, Unidad, Precio, Precio oferta, ¿Hay hoy?, Nota, Descripción, Ideal para, Cómo guardar, Foto, Emoji.
+Si la planilla no responde, la página muestra lo último que bajó, y si no hay nada usa `productos.js`.
+
+## Panel admin (para don Vic)
+
+En `admin/` está el panel para editar la planilla desde el celular (Google Apps Script). Se pega en la planilla en **Extensiones → Apps Script** (`Code.gs` y un archivo HTML llamado `Index`) y se publica como aplicación web.
+
 ## Lo que falta (fase 2)
 
-- Pasar los productos a Supabase para que el dueño cambie precios desde el celular.
 - Fotos reales y dominio propio.
 - Ficha de Google Business.
 

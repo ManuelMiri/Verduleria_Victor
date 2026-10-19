@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+  /* Usé el mismo verde de la planilla para que don Vic lo sienta familiar */
+  :root {
+    --verde: #2e6b1f; --verde-claro: #e8f2e3; --fondo: #f6f7f4; --borde: #dfe3da;
+    --texto: #1f2a1a; --suave: #6b7565; --rojo: #b3261e; --naranjo: #c25e00;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         background: var(--fondo); color: var(--texto); }
+  header { background: var(--verde); color: #fff; padding: 14px 16px; position: sticky; top: 0; z-index: 5; }
+  header .fila { display: flex; align-items: center; justify-content: space-between; gap: 8px; max-width: 1100px; margin: 0 auto; }
+  header h1 { font-size: 18px; margin: 0; }
+  header a { color: #fff; font-size: 13px; opacity: .85; }
+  .stats { display: flex; gap: 14px; font-size: 13px; opacity: .9; max-width: 1100px; margin: 6px auto 0; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 14px 16px 80px; }
+  .barra { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .barra input[type=search] { flex: 1; min-width: 180px; padding: 10px 12px; border: 1px solid var(--borde); border-radius: 10px; font-size: 15px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip { border: 1px solid var(--borde); background: #fff; padding: 6px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; }
+  .chip.on { background: var(--verde); color: #fff; border-color: var(--verde); }
+
+  button { font: inherit; cursor: pointer; }
+  .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--borde); background: #fff; }
+  .btn.prim { background: var(--verde); color: #fff; border-color: var(--verde); }
+  .btn.peligro { color: var(--rojo); }
+
+  .lista { display: grid; gap: 10px; }
+  .prod { display: grid; grid-template-columns: 56px 1fr auto auto auto auto; gap: 12px; align-items: center;
+          background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 10px 12px; }
+  .prod.agotado { opacity: .6; }
+  .img { width: 56px; height: 56px; border-radius: 10px; background: var(--verde-claro); overflow: hidden;
+         display: grid; place-items: center; font-size: 28px; }
+  .img img { width: 100%; height: 100%; object-fit: cover; }
+  .info h3 { margin: 0; font-size: 15px; }
+  .info small { display: block; color: var(--suave); font-size: 12px; margin-top: 2px; }
+  .badge { display: inline-block; background: #fff1e0; color: var(--naranjo); font-size: 11px; padding: 1px 6px; border-radius: 6px; margin-left: 6px; font-weight: 600; }
+
+  .campo { display: flex; flex-direction: column; font-size: 11px; color: var(--suave); }
+  .campo input { width: 92px; padding: 7px 8px; border: 1px solid var(--borde); border-radius: 8px; font-size: 14px; }
+  .campo input.guardando { border-color: var(--naranjo); }
+
+  .switch { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; user-select: none; }
+  .switch input { display: none; }
+  .switch span { width: 40px; height: 22px; background: #ccc; border-radius: 999px; position: relative; transition: .15s; }
+  .switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: .15s; }
+  .switch input:checked + span { background: var(--verde); }
+  .switch input:checked + span::after { left: 21px; }
+  .switch em { font-style: normal; width: 44px; }
+
+  .acciones { display: flex; gap: 6px; }
+  .acciones button { padding: 7px 10px; border-radius: 8px; border: 1px solid var(--borde); background: #fff; font-size: 13px; }
+
+  .vacio { text-align: center; color: var(--suave); padding: 40px 0; }
+
+  /* En el celular paso a tarjetas, que es donde más lo va a usar */
+  @media (max-width: 720px) {
+    .prod { grid-template-columns: 56px 1fr; }
+    .prod .campo, .prod .switch, .prod .acciones { grid-column: span 1; }
+    .controles { grid-column: 1 / -1; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    /* en iPhone, si la letra del input es menor a 16px, hace zoom solo al tocarlo */
+    .campo input, .barra input[type=search] { width: 100px; font-size: 16px; }
+    .barra input[type=search] { width: auto; }
+  }
+  @media (min-width: 721px) { .controles { display: contents; } }
+
+  /* El modal se me salía de la pantalla en el iPhone: ahora lo centro fijo y no lo dejo pasar del ancho */
+  dialog { border: none; border-radius: 14px; padding: 0; position: fixed; inset: 0; margin: auto;
+           width: calc(100% - 24px); max-width: 560px; max-height: 92vh; max-height: 92dvh; overflow: hidden; }
+  dialog::backdrop { background: rgba(0,0,0,.35); }
+  form { padding: 18px; display: grid; gap: 10px; overflow-y: auto; overflow-x: hidden; max-height: 92vh; max-height: 92dvh; }
+  form h2 { margin: 0 0 4px; font-size: 18px; }
+  /* minmax(0,1fr) para que las columnas se puedan achicar más que el ancho mínimo del input */
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+  form label { display: flex; flex-direction: column; font-size: 12px; color: var(--suave); gap: 4px; min-width: 0; }
+  form input, form select, form textarea { width: 100%; min-width: 0; padding: 9px 10px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; font-size: 16px; color: var(--texto); background: #fff; }
+  form textarea { resize: vertical; min-height: 54px; }
+  .preview { display: flex; gap: 10px; align-items: center; }
+  .preview .img { width: 72px; height: 72px; }
+  .pie { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #222; color: #fff;
+           padding: 10px 16px; border-radius: 10px; font-size: 14px; opacity: 0; pointer-events: none; transition: .2s; max-width: 90vw; }
+  #toast.on { opacity: 1; }
+  #toast.error { background: var(--rojo); }
+  .fab { position: fixed; right: 18px; bottom: 18px; border-radius: 999px; padding: 14px 18px; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+</style>
+</head>
+<body>
+<header>
+  <div class="fila">
+    <h1>🍅 Frutería don Vic · Panel</h1>
+    <a href="<?= urlPlanilla ?>" target="_blank">Abrir planilla ↗</a>
+  </div>
+  <div class="stats" id="stats">Cargando…</div>
+</header>
+
+<main>
+  <div class="barra">
+    <input type="search" id="buscar" placeholder="Buscar producto…">
+    <button class="btn" id="btnAgotados">Solo sin stock</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="lista" id="lista"><p class="vacio">Cargando productos…</p></div>
+</main>
+
+<button class="btn prim fab" id="btnNuevo">+ Agregar</button>
+
+<dialog id="modal">
+  <form id="form" method="dialog">
+    <h2 id="tituloForm">Producto</h2>
+    <label>Nombre<input name="nombre" required></label>
+    <div class="grid2">
+      <label>Categoría<select name="categoria" id="selCategoria"></select></label>
+      <label>Unidad<select name="unidad" id="selUnidad"></select></label>
+      <label>Precio<input name="precio" type="number" min="0" step="10" required></label>
+      <label>Precio oferta<input name="oferta" type="number" min="0" step="10" placeholder="Sin oferta"></label>
+      <label>¿Hay hoy?<select name="hay" id="selHay"></select></label>
+      <label>Nota<input name="nota" placeholder="Ej: Malla de 5 kg"></label>
+    </div>
+    <label>Descripción<textarea name="descripcion"></textarea></label>
+    <label>Ideal para<input name="ideal"></label>
+    <label>Cómo guardar<input name="guardar"></label>
+    <div class="grid2">
+      <label>Foto (ID de Unsplash o URL)<input name="foto" id="inFoto"></label>
+      <label>Emoji<input name="emoji" id="inEmoji" maxlength="4"></label>
+    </div>
+    <div class="preview"><div class="img" id="prevImg"></div><small id="prevTxt" style="color:var(--suave)">Vista previa de la foto</small></div>
+    <div class="pie">
+      <button type="button" class="btn" id="btnCancelar">Cancelar</button>
+      <button type="submit" class="btn prim" id="btnGuardar">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast"></div>
+
+<script>
+  // Todo el estado del panel vive acá
+  let datos = { productos: [], opciones: { categoria: [], unidad: [], hay: ['Sí', 'No'] } };
+  let filtroCat = 'Todas', texto = '', soloAgotados = false, editando = null;
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const clp = n => '$' + Number(n || 0).toLocaleString('es-CL');
+
+  // Envolví google.script.run en una promesa porque los callbacks me tenían mareado
+  function llamar(fn, ...args) {
+    return new Promise((ok, mal) =>
+      google.script.run.withSuccessHandler(ok).withFailureHandler(mal)[fn](...args));
+  }
+
+  function toast(msg, error) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.className = 'on' + (error ? ' error' : '');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.className = '', error ? 4000 : 2000);
+  }
+
+  function errorMsg(e) { return (e && e.message ? e.message : String(e)).replace(/^Error:\s*/, ''); }
+
+  // Las fotos de la planilla son IDs de Unsplash tipo "photo-1582...", así que armo la URL
+  function urlFoto(f, tam) {
+    f = String(f || '').trim();
+    if (!f) return '';
+    if (/^https?:\/\//.test(f)) return f;
+    return 'https://images.unsplash.com/' + f + '?w=' + tam + '&h=' + tam + '&fit=crop&auto=format';
+  }
+
+  function imgHtml(p, tam) {
+    const u = urlFoto(p.foto, tam);
+    const emoji = esc(p.emoji || '🥬');
+    return u ? `<img src="${esc(u)}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${emoji}'))">` : emoji;
+  }
+
+  function actualizar(nuevos) {
+    datos = nuevos;
+    render();
+  }
+
+  function render() {
+    const ps = datos.productos;
+    const sinStock = ps.filter(p => p.hay === 'No').length;
+    const enOferta = ps.filter(p => p.oferta !== '' && p.oferta > 0).length;
+    $('#stats').innerHTML = `<span>${ps.length} productos</span><span>${sinStock} sin stock</span><span>${enOferta} en oferta</span>`;
+
+    // chips de categorías
+    const cats = ['Todas', ...datos.opciones.categoria];
+    $('#chips').innerHTML = cats.map(c => `<button class="chip ${c === filtroCat ? 'on' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
+    $('#btnAgotados').classList.toggle('prim', soloAgotados);
+
+    const q = texto.toLowerCase();
+    const visibles = ps.filter(p =>
+      (filtroCat === 'Todas' || p.categoria === filtroCat) &&
+      (!soloAgotados || p.hay === 'No') &&
+      (!q || (p.nombre + ' ' + p.descripcion + ' ' + p.nota).toLowerCase().includes(q)));
+
+    if (!visibles.length) {
+      $('#lista').innerHTML = '<p class="vacio">No hay productos que coincidan.</p>';
+      return;
+    }
+
+    $('#lista').innerHTML = visibles.map(p => {
+      const hay = p.hay === 'Sí';
+      const oferta = p.oferta !== '' && p.oferta > 0;
+      return `
+      <article class="prod ${hay ? '' : 'agotado'}" data-fila="${p.fila}">
+        <div class="img">${imgHtml(p, 112)}</div>
+        <div class="info">
+          <h3>${esc(p.nombre)}${oferta ? `<span class="badge">OFERTA ${clp(p.oferta)}</span>` : ''}</h3>
+          <small>${esc(p.categoria)} · ${esc(p.unidad)}${p.nota ? ' · ' + esc(p.nota) : ''}</small>
+        </div>
+        <div class="controles">
+          <label class="campo">Precio<input type="number" min="0" step="10" data-campo="precio" value="${esc(p.precio)}"></label>
+          <label class="campo">Oferta<input type="number" min="0" step="10" data-campo="oferta" value="${esc(p.oferta)}" placeholder="—"></label>
+          <label class="switch"><input type="checkbox" data-campo="hay" ${hay ? 'checked' : ''}><span></span><em>${hay ? 'Hay' : 'No hay'}</em></label>
+          <div class="acciones">
+            <button data-accion="editar" title="Editar">✏️</button>
+            <button data-accion="borrar" title="Borrar">🗑️</button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  const porFila = fila => datos.productos.find(p => p.fila === Number(fila));
+
+  // ---- cambios rápidos desde la lista ----
+  $('#lista').addEventListener('change', async e => {
+    const el = e.target;
+    const campo = el.dataset.campo;
+    if (!campo) return;
+    const p = porFila(el.closest('.prod').dataset.fila);
+    let valor = campo === 'hay' ? (el.checked ? 'Sí' : 'No') : el.value.trim();
+
+    if (campo === 'oferta' && valor !== '' && Number(valor) >= p.precio) {
+      toast('La oferta tiene que ser más barata que el precio', true);
+      el.value = p.oferta;
+      return;
+    }
+
+    el.classList.add('guardando');
+    try {
+      actualizar(await llamar('cambiarCampo', p.fila, p.nombre, campo, valor));
+      toast('Guardado ✓');
+    } catch (err) {
+      toast(errorMsg(err), true);
+      render(); // vuelvo al valor que había
+    }
+  });
+
+  // Enter en precio/oferta guarda al tiro
+  $('#lista').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.dataset.campo) e.target.blur();
+  });
+
+  $('#lista').addEventListener('click', async e => {
+    const btn = e.target.closest('button[data-accion]');
+    if (!btn) return;
+    const p = porFila(btn.closest('.prod').dataset.fila);
+    if (btn.dataset.accion === 'editar') abrirForm(p);
+    if (btn.dataset.accion === 'borrar') {
+      if (!confirm(`¿Borrar "${p.nombre}"? Esto elimina la fila de la planilla.`)) return;
+      try {
+        actualizar(await llamar('eliminarProducto', p.fila, p.nombre));
+        toast('Producto eliminado');
+      } catch (err) { toast(errorMsg(err), true); }
+    }
+  });
+
+  // ---- filtros ----
+  $('#chips').addEventListener('click', e => {
+    const c = e.target.closest('.chip');
+    if (c) { filtroCat = c.dataset.cat; render(); }
+  });
+  $('#buscar').addEventListener('input', e => { texto = e.target.value; render(); });
+  $('#btnAgotados').addEventListener('click', () => { soloAgotados = !soloAgotados; render(); });
+
+  // ---- formulario (nuevo / editar) ----
+  function llenarSelect(sel, opciones, actual) {
+    const lista = [...opciones];
+    if (actual && !lista.includes(actual)) lista.push(actual); // por si hay un valor viejo que no está en la lista
+    sel.innerHTML = lista.map(o => `<option ${o === actual ? 'selected' : ''}>${esc(o)}</option>`).join('');
+  }
+
+  function abrirForm(p) {
+    editando = p || null;
+    const f = $('#form');
+    f.reset();
+    $('#tituloForm').textContent = p ? 'Editar ' + p.nombre : 'Nuevo producto';
+    llenarSelect($('#selCategoria'), datos.opciones.categoria, p && p.categoria);
+    llenarSelect($('#selUnidad'), datos.opciones.unidad, p && p.unidad);
+    llenarSelect($('#selHay'), datos.opciones.hay, p ? p.hay : 'Sí');
+    if (p) ['nombre', 'precio', 'oferta', 'nota', 'descripcion', 'ideal', 'guardar', 'foto', 'emoji']
+      .forEach(k => f.elements[k].value = p[k] ?? '');
+    previewFoto();
+    $('#modal').showModal();
+  }
+
+  function previewFoto() {
+    const p = { foto: $('#inFoto').value, emoji: $('#inEmoji').value };
+    $('#prevImg').innerHTML = imgHtml(p, 144);
+  }
+  $('#inFoto').addEventListener('input', previewFoto);
+  $('#inEmoji').addEventListener('input', previewFoto);
+
+  $('#btnNuevo').addEventListener('click', () => abrirForm(null));
+  $('#btnCancelar').addEventListener('click', () => $('#modal').close());
+
+  $('#form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const datosForm = Object.fromEntries(new FormData(e.target).entries());
+    if (editando) { datosForm.fila = editando.fila; datosForm.nombreOriginal = editando.nombre; }
+
+    const btn = $('#btnGuardar');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+    try {
+      actualizar(await llamar('guardarProducto', datosForm));
+      $('#modal').close();
+      toast(editando ? 'Cambios guardados ✓' : 'Producto agregado ✓');
+    } catch (err) {
+      toast(errorMsg(err), true);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Guardar';
+    }
+  });
+
+  // ---- arranque ----
+  llamar('obtenerDatos').then(actualizar).catch(err => {
+    $('#lista').innerHTML = `<p class="vacio">No pude cargar los productos: ${esc(errorMsg(err))}</p>`;
+    $('#stats').textContent = '';
+  });
+</script>
+</body>
+</html>

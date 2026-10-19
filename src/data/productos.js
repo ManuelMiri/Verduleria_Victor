@@ -1,5 +1,5 @@
-// Por ahora los productos van en este archivo. Más adelante los paso a Supabase
-// para que el dueño cambie precios desde el celular sin tocar código.
+// Los productos de verdad ahora salen de la planilla de Google (ver data/hoja.js).
+// Este archivo queda de respaldo: se usa si no hay VITE_SHEET_ID o si la planilla no responde.
 //
 // unidad: 'kg' | 'unidad' | 'malla' | 'atado'
 // hayHoy: lo uso en vez de stock exacto, porque en una verdulería eso cambia todo el día
