@@ -1,61 +1,42 @@
-# Verdulería El Huerto
+# Frutería don Vic
 
-Página de catálogo para la verdulería, con pedido por WhatsApp. Hecha con React + Vite y componentes de [React Bits](https://reactbits.dev/).
+Catálogo web con pedido por WhatsApp para una frutería de barrio en Talca. El dueño actualiza precios, ofertas y stock desde el celular, sin tocar código.
 
-## Correrla
+## Qué hace
+
+- Catálogo con buscador, filtro por categoría y sección de ofertas del día.
+- Carrito que arma el pedido y lo envía por WhatsApp, con costo de despacho según sector.
+- Los productos se leen en vivo desde una planilla de Google Sheets.
+- Panel admin móvil (Google Apps Script) para que el dueño edite precios, ofertas y disponibilidad.
+
+## Stack
+
+- **Frontend:** React 19 + Vite, componentes animados de [React Bits](https://reactbits.dev/).
+- **Datos:** Google Sheets como base de datos liviana, leída con el endpoint `gviz` (sin backend ni API key).
+- **Admin:** Google Apps Script, con escrituras protegidas con `LockService` y validación en servidor.
+- **Deploy:** GitHub Actions → GitHub Pages.
+
+## Decisiones técnicas
+
+- **Sin backend propio:** para un negocio chico, una planilla que el dueño ya sabe usar resulta más mantenible que una base de datos.
+- **Resiliencia:** la página guarda en caché la última versión de los productos y, si la planilla no responde, usa un respaldo local. Nunca queda vacía.
+- **Carrito estable:** el id de cada producto sale de su nombre y no de la fila, así reordenar la planilla no desarma los carritos abiertos.
+
+## Correr en local
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Qué cambiar antes de mostrársela al dueño
+Sin `VITE_SHEET_ID` en el `.env`, la página usa los productos de respaldo de `src/data/productos.js`.
 
-- `src/data/tienda.js`: nombre, WhatsApp, dirección, horario, sectores de despacho y pedido mínimo.
-- Los productos, precios, ofertas y el "¿Hay hoy?" salen de la planilla de Google (ver abajo). `src/data/productos.js` queda solo de respaldo.
-- Las fotos son de Unsplash (banco gratis, sin pagar ni pedir permiso) y van enlazadas con el campo `foto` de cada producto. Si una foto no carga, aparece el emoji. La idea es cambiarlas por fotos reales del local.
+## Estructura
 
-## Componentes de React Bits que usé
-
-- **CircularText**: el sello que gira en el hero.
-- **BlurText**: el título que aparece palabra por palabra.
-- **FlipCard**: las tarjetas de producto. Adelante el precio y el botón, atrás la descripción (se da vuelta al tocarla).
-- **MetaBalls**: el fondo de manchas en durazno que se mueven y se fusionan.
-- **ClickSpark**: las chispas al agregar un producto (el + cuando está en 0) y en las ofertas.
-- **SpringCheck**: el check en "Tu pedido" para ir marcando lo que ya revisaste.
-
-Están copiados en `src/components/reactbits/`. Se pueden agregar más con
-`npx shadcn@latest add @react-bits/<Componente>-JS-CSS`.
-
-## Publicar
-
-`npm run build` y subir la carpeta `dist/` a Cloudflare Pages o Vercel.
-
-## Productos desde la planilla de Google
-
-La página lee la planilla `Productos-Fruteria-don-Vic` cada vez que se abre (y cuando vuelves a la pestaña).
-
-1. En la planilla: **Compartir → Acceso general → Cualquier persona con el enlace → Lector**.
-2. Copia el ID del link (`https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit`).
-3. Crea un archivo `.env` (puedes copiar `.env.example`) con `VITE_SHEET_ID=ese_id`.
-4. `npm run build` o `npm run deploy`. El ID queda metido en el build, así que si cambias de planilla hay que volver a publicar.
-
-Las columnas tienen que seguir en este orden (A..L): Nombre, Categoría, Unidad, Precio, Precio oferta, ¿Hay hoy?, Nota, Descripción, Ideal para, Cómo guardar, Foto, Emoji.
-Si la planilla no responde, la página muestra lo último que bajó, y si no hay nada usa `productos.js`.
-
-## Panel admin (para don Vic)
-
-En `admin/` está el panel para editar la planilla desde el celular (Google Apps Script). Se pega en la planilla en **Extensiones → Apps Script** (`Code.gs` y un archivo HTML llamado `Index`) y se publica como aplicación web.
-
-## Lo que falta (fase 2)
-
-- Fotos reales y dominio propio.
-- Ficha de Google Business.
-
-## Publicar en GitHub Pages
-
-```bash
-npm run deploy
 ```
-
-Eso construye la página y la sube a la rama `gh-pages`. La primera vez hay que activar Pages en el repo: Settings → Pages → Branch: `gh-pages` / `(root)`.
+src/
+  data/hoja.js        lectura de la planilla, caché y respaldo
+  components/         tarjetas, carrito, fotos
+admin/                panel de administración (Apps Script)
+.github/workflows/    deploy automático
+```
