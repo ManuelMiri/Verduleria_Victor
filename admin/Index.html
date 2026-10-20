@@ -127,7 +127,7 @@
     <label>Ideal para<input name="ideal"></label>
     <label>Cómo guardar<input name="guardar"></label>
     <div class="grid2">
-      <label>Foto (ID de Unsplash o URL)<input name="foto" id="inFoto"></label>
+      <label>Foto (ID de Unsplash, link de Drive o URL)<input name="foto" id="inFoto"></label>
       <label>Emoji<input name="emoji" id="inEmoji" maxlength="4"></label>
     </div>
     <div class="preview"><div class="img" id="prevImg"></div><small id="prevTxt" style="color:var(--suave)">Vista previa de la foto</small></div>
@@ -166,9 +166,12 @@
   function errorMsg(e) { return (e && e.message ? e.message : String(e)).replace(/^Error:\s*/, ''); }
 
   // Las fotos de la planilla son IDs de Unsplash tipo "photo-1582...", así que armo la URL
+  // Si pegan un link de Google Drive lo paso a miniatura, porque el link de compartir no es la imagen
   function urlFoto(f, tam) {
     f = String(f || '').trim();
     if (!f) return '';
+    const drive = f.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/);
+    if (drive) return 'https://drive.google.com/thumbnail?id=' + drive[1] + '&sz=w' + (tam * 2);
     if (/^https?:\/\//.test(f)) return f;
     return 'https://images.unsplash.com/' + f + '?w=' + tam + '&h=' + tam + '&fit=crop&auto=format';
   }
