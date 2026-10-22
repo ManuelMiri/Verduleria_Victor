@@ -136,7 +136,9 @@ button { cursor: pointer; }
 /* ---------- ofertas ---------- */
 .ofertas { max-width: 1200px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 3rem) 2.5rem; }
 .ofertas h2 { font-size: 1.6rem; margin-bottom: 1rem; }
-.ofertas__fila { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.9rem; }
+/* cada oferta de la cinta tiene ancho fijo, así la cinta corre pareja */
+.logoloop .oferta { width: 250px; height: 100%; }
+.logoloop .oferta__chispa { display: block; height: 100%; }
 .oferta {
   display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; column-gap: 0.8rem;
   text-align: left; background: var(--tomate); color: #fff; border: 0; border-radius: var(--radio);
@@ -171,6 +173,9 @@ button { cursor: pointer; }
 .sin-resultados { color: var(--gris); padding: 2rem 0; }
 
 /* ---------- tarjeta de producto (FlipCard) ---------- */
+/* envoltorio que detecta mouse/dedo para prender el borde eléctrico */
+.producto-wrap { position: relative; }
+.producto-wrap:hover, .producto-wrap:focus-within { z-index: 2; }
 /* El FlipCard pide un ancho y alto fijos en px. Yo le pongo ancho 100% para que llene la
    columna de la grilla, y un alto fijo porque las dos caras tienen que medir lo mismo */
 .flip-card.producto-flip { display: block; width: 100%; height: 340px; }
@@ -330,7 +335,8 @@ button { cursor: pointer; }
   .sello::before, .circular-text.sello__texto { width: 300px; height: 300px; }
   .circular-text.sello__texto span { font-size: 17px; }
   .sello__centro { width: 215px; height: 215px; }
-  .grilla, .ofertas__fila { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+  .grilla { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+  .logoloop .oferta { width: 220px; }
   .producto__foto { height: 105px; width: calc(100% + 1.8rem); margin: -0.9rem -0.9rem 0.5rem; }
   /* en el celular las columnas son angostas, así que le doy un poco más de alto para el reverso */
   .flip-card.producto-flip { height: 330px; }

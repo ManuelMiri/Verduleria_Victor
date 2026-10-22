@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from 'react';
 import FlipCard from './reactbits/FlipCard';
+import ElectricBorder from './reactbits/ElectricBorder';
 import ClickSpark from './reactbits/ClickSpark';
 import { CHISPAS } from '../chispas';
 import Foto from './Foto';
@@ -15,8 +17,29 @@ export default function ProductoCard({ producto, cantidad, onCambiar }) {
   const { nombre, unidad, precio, oferta, hayHoy, nota, descripcion, idealPara, guardar } = producto;
   const step = paso(unidad);
 
+  // El borde eléctrico solo aparece cuando la tarjeta está "activa": con el mouse mientras
+  // está encima, y en el celular cuando la tocas (se apaga solo a los 2,5 segundos).
+  // Guardo además cómo se activó, porque lo dibujo en lugares distintos (ver más abajo)
+  const [activa, setActiva] = useState(null); // null | 'mouse' | 'touch'
+  const apagar = useRef(null);
+  useEffect(() => () => clearTimeout(apagar.current), []);
+  const alEntrar = (e) => e.pointerType === 'mouse' && setActiva('mouse');
+  const alSalir = (e) => e.pointerType === 'mouse' && setActiva(null);
+  const alTocar = (e) => {
+    if (e.pointerType === 'mouse') return;
+    setActiva('touch');
+    clearTimeout(apagar.current);
+    apagar.current = setTimeout(() => setActiva(null), 2500);
+  };
+  const electrico = <ElectricBorder color="#5cb83a" radius={18} speed={1} chaos={0.9} />;
+  // Con mouse lo dibujo DENTRO de cada cara, así acompaña la inclinación de la tarjeta.
+  // En el celular lo dibujo FUERA, encima de la tarjeta: al tocarla se da vuelta, y los
+  // navegadores de celular no pintan bien el filtro dentro de la cara trasera en 3D
+  const borde = activa === 'mouse' && electrico;
+
   const frente = (
     <div className={`cara cara--frente ${!hayHoy ? 'cara--agotado' : ''}`}>
+      {borde}
       {oferta && hayHoy && <span className="chip chip--oferta">Oferta</span>}
       {!hayHoy && <span className="chip chip--no">No hay hoy</span>}
       <span className="girar" aria-hidden="true">↻</span>
@@ -66,6 +89,7 @@ export default function ProductoCard({ producto, cantidad, onCambiar }) {
 
   const reverso = (
     <div className="cara cara--reverso">
+      {borde}
       <Foto producto={producto} w={120} className="reverso__foto" />
       <h3 className="producto__nombre">{nombre}</h3>
       <p className="reverso__texto">{descripcion}</p>
@@ -84,6 +108,7 @@ export default function ProductoCard({ producto, cantidad, onCambiar }) {
   );
 
   return (
+    <div className="producto-wrap" onPointerEnter={alEntrar} onPointerLeave={alSalir} onPointerDown={alTocar}>
     <FlipCard
       front={frente}
       back={reverso}
@@ -101,5 +126,7 @@ export default function ProductoCard({ producto, cantidad, onCambiar }) {
       glareOpacity={0.35}
       className="producto-flip"
     />
+    {activa === 'touch' && electrico}
+    </div>
   );
 }

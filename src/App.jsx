@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import CircularText from './components/reactbits/CircularText';
 import BlurText from './components/reactbits/BlurText';
 import RotatingText from './components/reactbits/RotatingText';
+import LogoLoop from './components/reactbits/LogoLoop';
+import AnimatedContent from './components/reactbits/AnimatedContent';
 import MetaBalls from './components/reactbits/MetaBalls';
 import ClickSpark from './components/reactbits/ClickSpark';
 import { CHISPAS } from './chispas';
@@ -127,19 +129,23 @@ export default function App() {
         </div>
 
         {/* El CircularText de React Bits girando alrededor del logo, como un sello */}
-        <div className="sello">
+        {/* AnimatedContent: el sello aparece creciendo un poco al cargar */}
+        <AnimatedContent className="sello" distance={30} scale={0.85} duration={0.9} delay={0.2}>
           <CircularText text="FRESCO DEL DÍA ✦ DESPACHO A DOMICILIO ✦ " onHover="slowDown" spinDuration={22} className="sello__texto" />
           {/* al centro del sello va el logo de la frutería, sobre un círculo crema */}
           <div className="sello__centro">
             <img src={logo} alt="Logo Frutería Don Vic" width="378" height="480" />
           </div>
-        </div>
+        </AnimatedContent>
       </header>
 
       {ofertas.length > 0 && (
         <section id="ofertas" className="ofertas">
+          <AnimatedContent distance={40}>
           <h2>Ofertas de hoy</h2>
-          <div className="ofertas__fila">
+          {/* las ofertas pasan en una cinta infinita (LogoLoop): salen por un lado y entran por el otro.
+              Se frena cuando pasas el mouse o el dedo, para poder tocar la que quieres */}
+          <LogoLoop speed={45} gap={14} ariaLabel="Ofertas de hoy">
             {/* estas tarjetas también son botones de agregar, así que les pongo las mismas chispas */}
             {ofertas.map((p) => (
               <ClickSpark key={p.id} {...CHISPAS} sparkColor={['#ffffff', '#ffd25e']} className="oferta__chispa">
@@ -153,12 +159,13 @@ export default function App() {
                 </button>
               </ClickSpark>
             ))}
-          </div>
+          </LogoLoop>
+          </AnimatedContent>
         </section>
       )}
 
       <main id="catalogo" className="catalogo">
-        <div className="catalogo__top">
+        <AnimatedContent className="catalogo__top" distance={40}>
           <h2>Catálogo</h2>
           <input
             className="buscador"
@@ -167,8 +174,9 @@ export default function App() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
-        </div>
+        </AnimatedContent>
 
+        <AnimatedContent distance={30} delay={0.08}>
         <div className="filtros" role="tablist">
           {categorias.map((c) => (
             <button key={c} className={`filtro ${c === categoria ? 'filtro--on' : ''}`} onClick={() => setCategoria(c)}>
@@ -176,6 +184,7 @@ export default function App() {
             </button>
           ))}
         </div>
+        </AnimatedContent>
 
         {cargando ? (
           <p className="sin-resultados">Cargando los productos de hoy…</p>
@@ -183,23 +192,27 @@ export default function App() {
           <p className="sin-resultados">No encontramos "{busqueda}". Pregúntanos por WhatsApp, quizás llegó hoy.</p>
         ) : (
           <div className="grilla">
-            {visibles.map((p) => (
-              <ProductoCard key={p.id} producto={p} cantidad={carrito[p.id] ?? 0} onCambiar={cambiarCantidad} />
+            {/* cada tarjeta sube al entrar en pantalla; el delay según su posición hace que
+                las de una misma fila aparezcan en cascada y no todas de golpe */}
+            {visibles.map((p, i) => (
+              <AnimatedContent key={p.id} distance={50} delay={(i % 4) * 0.07} threshold={0.1}>
+                <ProductoCard producto={p} cantidad={carrito[p.id] ?? 0} onCambiar={cambiarCantidad} />
+              </AnimatedContent>
             ))}
           </div>
         )}
       </main>
 
-      <section className="como">
+      <AnimatedContent as="section" className="como" distance={50}>
         <h2>¿Cómo funciona?</h2>
         <ol>
           <li><strong>Arma tu pedido</strong> con lo que haya hoy.</li>
           <li><strong>Envíalo por WhatsApp</strong> y te confirmamos el total.</li>
           <li><strong>Recíbelo en tu casa</strong> o retíralo en el local. Pagas al recibir.</li>
         </ol>
-      </section>
+      </AnimatedContent>
 
-      <footer className="pie">
+      <AnimatedContent as="footer" className="pie" distance={30}>
         <div>
           <strong>{TIENDA.nombre}</strong>
           <p>{TIENDA.direccion}</p>
@@ -209,7 +222,7 @@ export default function App() {
           <a href={`https://wa.me/${TIENDA.whatsapp}`} target="_blank" rel="noreferrer">WhatsApp</a>
           <a href={`https://instagram.com/${TIENDA.instagram}`} target="_blank" rel="noreferrer">Instagram</a>
         </div>
-      </footer>
+      </AnimatedContent>
 
       {/* botón flotante en el celular para abrir el pedido sin subir hasta arriba */}
       {cantidadItems > 0 && !abierto && (
