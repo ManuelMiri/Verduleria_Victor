@@ -1,10 +1,15 @@
 /* cinta de ofertas: los bordes se desvanecen para que las tarjetas aparezcan y desaparezcan suave */
 .logoloop {
   position: relative; overflow: hidden; padding: 6px 0 10px;
+  /* el arrastre horizontal es mío; el vertical lo dejo al navegador para que igual puedas
+     hacer scroll de la página con el dedo encima de las ofertas */
+  touch-action: pan-y; user-select: none; -webkit-user-select: none;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
 }
 .logoloop__pista { display: flex; width: max-content; will-change: transform; }
+/* que el navegador no intente arrastrar las fotos como imagen */
+.logoloop img { -webkit-user-drag: none; pointer-events: none; }
 .logoloop__lista { display: flex; gap: var(--ll-gap); padding: 0 calc(var(--ll-gap) / 2); margin: 0; list-style: none; }
 .logoloop__item { flex: none; }
 /* si la persona pidió menos movimiento, dejo la fila quieta y que se pueda deslizar con el dedo */

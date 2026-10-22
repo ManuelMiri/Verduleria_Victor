@@ -14,6 +14,16 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+/* Que nada pueda ensanchar la página en el celular. Antes el texto que gira alrededor del logo
+   sobresalía por los lados y la página se podía arrastrar hacia el costado, dejando un espacio
+   en blanco a la derecha. Uso "clip" y no "hidden" porque hidden rompe la barra de arriba
+   (position: sticky); hidden queda solo de respaldo para navegadores viejos */
+html, body { overflow-x: hidden; }
+@supports (overflow: clip) {
+  html, body { overflow-x: clip; }
+}
+/* y corto lo que sobresalga en el propio hero, así el problema no depende solo de lo de arriba */
+.hero { overflow-x: clip; }
 body {
   margin: 0;
   background: var(--crema);
@@ -336,9 +346,12 @@ button { cursor: pointer; }
   /* con "Padre Las Casas, Temuco" el sticker quedaba en dos líneas en el celular,
      así que en pantallas chicas dejo solo la ubicación (el título ya dice que es feria) */
   .kicker__rubro { display: none; }
-  .sello::before, .circular-text.sello__texto { width: 300px; height: 300px; }
+  /* 300px, pero nunca más ancho que la pantalla menos un margen: en teléfonos angostos
+     (360px) las letras que giran se salían por los lados */
+  .sello { --sello: min(300px, calc(100vw - 72px)); }
+  .sello::before, .circular-text.sello__texto { width: var(--sello); height: var(--sello); }
   .circular-text.sello__texto span { font-size: 17px; }
-  .sello__centro { width: 215px; height: 215px; }
+  .sello__centro { width: calc(var(--sello) * 0.72); height: calc(var(--sello) * 0.72); }
   .grilla { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
   .logoloop .oferta { width: 220px; }
   .producto__foto { height: 105px; width: calc(100% + 1.8rem); margin: -0.9rem -0.9rem 0.5rem; }
