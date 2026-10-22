@@ -74,7 +74,8 @@ button { cursor: pointer; }
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--linea);
 }
-.marca { font-family: 'Fraunces', serif; font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
+.marca { display: inline-flex; align-items: center; gap: 0.55rem; font-family: 'Fraunces', serif; font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
+.marca__logo { height: 44px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(31, 74, 44, 0.18)); }
 
 /* ---------- hero ---------- */
 .hero {
@@ -114,12 +115,13 @@ button { cursor: pointer; }
 }
 .circular-text.sello__texto { width: 260px; height: 260px; color: var(--verde); }
 .circular-text.sello__texto span { font-size: 17px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em; }
-/* foto redonda de la canasta al centro del CircularText */
+/* el logo al centro del CircularText: un círculo crema y el logo adentro sin recortarlo */
 .sello__centro {
-  position: absolute; width: 150px; height: 150px; border-radius: 50%;
-  object-fit: cover; pointer-events: none;
+  position: absolute; width: 168px; height: 168px; border-radius: 50%;
+  background: var(--papel); display: grid; place-items: center; pointer-events: none;
   box-shadow: 0 10px 30px -12px rgba(31, 74, 44, 0.45);
 }
+.sello__centro img { width: 82%; height: 82%; object-fit: contain; }
 
 /* ---------- ofertas ---------- */
 .ofertas { max-width: 1200px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 3rem) 2.5rem; }
@@ -317,7 +319,7 @@ button { cursor: pointer; }
   .kicker__rubro { display: none; }
   .sello::before, .circular-text.sello__texto { width: 200px; height: 200px; }
   .circular-text.sello__texto span { font-size: 14px; }
-  .sello__centro { width: 115px; height: 115px; }
+  .sello__centro { width: 128px; height: 128px; }
   .grilla, .ofertas__fila { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
   .producto__foto { height: 105px; width: calc(100% + 1.8rem); margin: -0.9rem -0.9rem 0.5rem; }
   /* en el celular las columnas son angostas, así que le doy un poco más de alto para el reverso */

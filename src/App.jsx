@@ -5,11 +5,12 @@ import MetaBalls from './components/reactbits/MetaBalls';
 import ClickSpark from './components/reactbits/ClickSpark';
 import { CHISPAS } from './chispas';
 import ProductoCard from './components/ProductoCard';
-import Foto, { fotoUrl } from './components/Foto';
+import Foto from './components/Foto';
 import Carrito from './components/Carrito';
 import { categoriasDe, useProductos } from './data/hoja';
 import { TIENDA } from './data/tienda';
 import { clp } from './utils';
+import logo from './assets/logo.webp';
 import './App.css';
 
 // Guardo el carrito en el navegador para que no se pierda si recargan la página.
@@ -96,7 +97,9 @@ export default function App() {
 
       <nav className="nav">
         <a href="#" className="marca">
-          <span aria-hidden="true">🥬</span> {TIENDA.nombre}
+          {/* el logo trae el nombre escrito, pero en chico no se lee, así que lo dejo también en texto */}
+          <img src={logo} alt="" className="marca__logo" width="40" height="51" />
+          {TIENDA.nombre}
         </a>
         <button className="btn btn--carrito" onClick={() => setAbierto(true)}>
           Mi pedido
@@ -126,16 +129,13 @@ export default function App() {
           </div>
         </div>
 
-        {/* El CircularText de React Bits girando alrededor de la canasta, como un sello */}
+        {/* El CircularText de React Bits girando alrededor del logo, como un sello */}
         <div className="sello">
           <CircularText text="FRESCO DEL DÍA ✦ DESPACHO A DOMICILIO ✦ " onHover="slowDown" spinDuration={22} className="sello__texto" />
-          {/* al centro del sello una foto de canasta con verduras, también de Unsplash */}
-          <img
-            className="sello__centro"
-            src={fotoUrl('photo-1627989147125-a004d05946d3', 360)}
-            alt=""
-            aria-hidden="true"
-          />
+          {/* al centro del sello va el logo de la frutería, sobre un círculo crema */}
+          <div className="sello__centro">
+            <img src={logo} alt="Logo Frutería Don Vic" width="378" height="480" />
+          </div>
         </div>
       </header>
 
