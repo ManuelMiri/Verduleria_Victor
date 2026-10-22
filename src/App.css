@@ -89,6 +89,9 @@ button { cursor: pointer; }
   border-bottom: 1px solid var(--linea);
 }
 .marca { display: inline-flex; align-items: center; gap: 0.55rem; font-family: 'Fraunces', serif; font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
+/* que la barra fija no tape el título de la sección al llegar con el menú */
+#catalogo, #ofertas, #contacto { scroll-margin-top: 84px; }
+.nav__menu .burbuja { display: inline-grid; margin-left: 0.4rem; min-width: 1.25rem; height: 1.25rem; font-size: 0.72rem; }
 .marca__logo { height: 44px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(31, 74, 44, 0.18)); }
 
 /* ---------- hero ---------- */
@@ -379,6 +382,10 @@ button { cursor: pointer; }
   /* con "Padre Las Casas, Temuco" el sticker quedaba en dos líneas en el celular,
      así que en pantallas chicas dejo solo la ubicación (el título ya dice que es feria) */
   .kicker__rubro { display: none; }
+  /* en el celular el menú necesita el espacio: dejo solo el logo, que igual lleva el nombre */
+  .marca__nombre { display: none; }
+  .nav { padding: 0.55rem 0.75rem; }
+  .marca__logo { height: 40px; }
   /* en el celular el recuadro usa todo el ancho que tiene: la frase más larga ocupa ~8,4 em */
   .hero__titulo .resaltado { font-size: calc((100vw - 48px) / 8.8); }
   .hero__titulo { --feria-size: calc((100vw - 44px) / 5.8); }

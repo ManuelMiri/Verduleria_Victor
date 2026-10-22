@@ -15,6 +15,7 @@ export default function AnimatedContent({
   scale = 1, // menor a 1 = además crece un poco al aparecer
   threshold = 0.15, // qué parte tiene que estar visible para que arranque
   className,
+  id,
   as = 'div',
 }) {
   const sinMovimiento = useReducedMotion();
@@ -24,11 +25,12 @@ export default function AnimatedContent({
 
   if (sinMovimiento) {
     const Simple = as;
-    return <Simple className={className}>{children}</Simple>;
+    return <Simple id={id} className={className}>{children}</Simple>;
   }
 
   return (
     <Tag
+      id={id}
       className={className}
       initial={{ [eje]: desde, opacity: initialOpacity, scale }}
       whileInView={{ [eje]: 0, opacity: 1, scale: 1 }}

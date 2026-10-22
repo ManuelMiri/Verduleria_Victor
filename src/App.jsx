@@ -4,6 +4,7 @@ import RotatingText from './components/reactbits/RotatingText';
 import LogoLoop from './components/reactbits/LogoLoop';
 import AnimatedContent from './components/reactbits/AnimatedContent';
 import DepthText from './components/reactbits/DepthText';
+import GooeyNav from './components/reactbits/GooeyNav';
 
 // Ajustes comunes de DepthText para los títulos de sección: menos capas y menos profundidad
 // que el ejemplo original, porque acá son títulos chicos y no el texto gigante del demo
@@ -35,6 +36,15 @@ export default function App() {
   const [categoria, setCategoria] = useState('Todo');
   const [busqueda, setBusqueda] = useState('');
   const [abierto, setAbierto] = useState(false);
+  // en qué parte de la página estás, para mover la gota del menú (0 catálogo, 1 contacto)
+  const [seccion, setSeccion] = useState(0);
+  useEffect(() => {
+    const pie = document.getElementById('contacto');
+    if (!pie) return;
+    const obs = new IntersectionObserver(([e]) => setSeccion(e.isIntersecting ? 1 : 0), { threshold: 0.3 });
+    obs.observe(pie);
+    return () => obs.disconnect();
+  }, []);
   // los productos ahora vienen de la planilla de Google (ver data/hoja.js)
   const { productos, cargando } = useProductos();
   const categorias = useMemo(() => categoriasDe(productos), [productos]);
@@ -108,15 +118,48 @@ export default function App() {
       </div>
 
       <nav className="nav">
-        <a href="#" className="marca">
+        {/* el logo te devuelve al comienzo de la página */}
+        <a
+          href="#"
+          className="marca"
+          aria-label="Volver al inicio"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        >
           {/* el logo trae el nombre escrito, pero en chico no se lee, así que lo dejo también en texto */}
           <img src={logo} alt="" className="marca__logo" width="40" height="51" />
-          {TIENDA.nombre}
+          <span className="marca__nombre">{TIENDA.nombre}</span>
         </a>
-        <button className="btn btn--carrito" onClick={() => setAbierto(true)}>
-          Mi pedido
-          {cantidadItems > 0 && <span className="burbuja">{cantidadItems}</span>}
-        </button>
+        {/* GooeyNav de React Bits. La gota se mueve sola según dónde estés:
+            catálogo mientras navegas, contacto al llegar al pie, y mi pedido con el carrito abierto */}
+        <GooeyNav
+          theme="light"
+          size="sm"
+          color="#1f4a2c"
+          activeTextColor="#fffdf8"
+          colors={['#d9472b', '#5cb83a', '#f3c9a3']}
+          particleCount={12}
+          activeIndex={abierto ? 2 : seccion}
+          // Catálogo y Contacto son links normales (#catalogo, #contacto) y el scroll suave lo hace
+          // el CSS; acá solo abro el carrito cuando tocan Mi pedido
+          onChange={(i) => i === 2 && setAbierto(true)}
+          items={[
+            { label: 'Catálogo', href: '#catalogo' },
+            { label: 'Contacto', href: '#contacto' },
+            {
+              label: (
+                <>
+                  Mi pedido
+                  {cantidadItems > 0 && <span className="burbuja">{cantidadItems}</span>}
+                </>
+              ),
+            },
+          ]}
+          className="nav__menu"
+          style={{ '--gn-frame': 'rgba(255, 253, 248, 0.85)', '--gn-ink': '#1f4a2c', '--gn-muted': '#4a463d' }}
+        />
       </nav>
 
       <header className="hero">
@@ -242,7 +285,7 @@ export default function App() {
         </ol>
       </AnimatedContent>
 
-      <AnimatedContent as="footer" className="pie" distance={30}>
+      <AnimatedContent as="footer" id="contacto" className="pie" distance={30}>
         <div>
           <strong>{TIENDA.nombre}</strong>
           <p>{TIENDA.direccion}</p>
