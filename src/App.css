@@ -113,7 +113,10 @@ button { cursor: pointer; }
 }
 /* Tamaños al revés: "Lo de la feria," va más chico y la frase que cambia más grande y dentro
    de un recuadro tomate, así lo que se mueve es lo que más llama la atención */
-.hero__titulo .hero__linea { font-size: 0.56em; letter-spacing: -0.015em; column-gap: 0.12em; }
+/* "Lo de la feria," en 3D: en su propia línea (DepthText viene como inline-block) */
+.hero__titulo .hero__linea-3d { display: block; width: fit-content; line-height: 0; }
+/* line-height 0: el contenedor tomaba el alto de línea del h1 grande y dejaba un hueco arriba;
+   las letras tienen su propio line-height en .titulo-3d */
 /* el recuadro: el ancho lo anima RotatingText según el largo de cada frase.
    El tamaño es el menor entre 0.64em y lo que deja el ancho de la pantalla, para que
    "sin cargar las bolsas" (la más larga) siempre quepa en una línea, también en el celular */

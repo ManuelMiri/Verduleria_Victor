@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import CircularText from './components/reactbits/CircularText';
-import BlurText from './components/reactbits/BlurText';
 import RotatingText from './components/reactbits/RotatingText';
 import LogoLoop from './components/reactbits/LogoLoop';
 import AnimatedContent from './components/reactbits/AnimatedContent';
@@ -123,10 +122,22 @@ export default function App() {
       <header className="hero">
         <div className="hero__texto">
           <p className="hero__kicker"><span aria-hidden="true">🍅</span> <span className="kicker__rubro">Frutas y verduras · </span>Padre Las Casas, Temuco</p>
-          {/* El título: arriba "Lo de la feria," aparece palabra por palabra (BlurText)
-              y abajo van rotando las frases en cursiva tomate (RotatingText) */}
+          {/* El título: arriba "Lo de la feria," en 3D (DepthText)
+              y abajo van rotando las frases en el recuadro tomate (RotatingText) */}
           <h1 className="hero__titulo">
-            <BlurText as="span" className="hero__linea" text={TIENDA.titulo} delay={120} animateBy="words" direction="top" />
+            {/* "Lo de la feria," en 3D (DepthText), como los títulos de sección pero más grande */}
+            <DepthText
+              text={TIENDA.titulo}
+              faceColor="#1f4a2c"
+              depthColor="#0c2214"
+              layers={18}
+              depth={1.3}
+              tilt={7}
+              orbitSpeed={0.12}
+              fontSize="0.56em"
+              fontWeight={800}
+              className="titulo-3d hero__linea-3d"
+            />
             <RotatingText texts={TIENDA.frases} className="resaltado" rotationInterval={3200} />
           </h1>
           <p className="hero__bajada">
