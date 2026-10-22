@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import SpringCheck from './reactbits/SpringCheck';
 import Foto from './Foto';
 import { TIENDA } from '../data/tienda';
 import { clp, paso, precioFinal, textoCantidad } from '../utils';
+
+// la animación de arrugar la nota usa Three.js, así que la cargo recién cuando aprietan "Vaciar"
+const NotaArrugada = lazy(() => import('./NotaArrugada'));
+const sinMovimiento = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Panel del pedido. No cobra nada online: arma el mensaje y lo manda por WhatsApp,
 // que es como el dueño ya trabaja. El pago online lo dejo para una fase 2.
@@ -13,6 +17,16 @@ export default function Carrito({ abierto, onCerrar, items, onCambiar, onVaciar 
   const [comentario, setComentario] = useState('');
   // los productos que la persona ya marcó como revisados, { idProducto: true }
   const [revisados, setRevisados] = useState({});
+  // mientras la nota se arruga y sale volando
+  const [arrugando, setArrugando] = useState(false);
+  const vaciar = () => {
+    if (sinMovimiento()) return onVaciar();
+    setArrugando(true);
+  };
+  const terminarArrugado = () => {
+    setArrugando(false);
+    onVaciar();
+  };
   // solo cuento los que siguen en el pedido, por si marcó uno y después lo sacó
   const listos = items.filter(({ producto }) => revisados[producto.id]).length;
 
@@ -110,7 +124,7 @@ export default function Carrito({ abierto, onCerrar, items, onCambiar, onVaciar 
                 </li>
               ))}
             </ul>
-            <button className="link" onClick={onVaciar}>Vaciar pedido</button>
+            <button className="link" onClick={vaciar} disabled={arrugando}>Vaciar pedido</button>
 
             <div className="form">
               <label>
@@ -152,6 +166,12 @@ export default function Carrito({ abierto, onCerrar, items, onCambiar, onVaciar 
             Enviar pedido por WhatsApp
           </button>
         </footer>
+        {/* la nota del pedido arrugándose (PaperCrumple de React Bits) encima de todo el panel */}
+        {arrugando && (
+          <Suspense fallback={null}>
+            <NotaArrugada items={items} subtotal={subtotal} onTerminar={terminarArrugado} />
+          </Suspense>
+        )}
       </aside>
     </>
   );

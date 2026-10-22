@@ -15,7 +15,8 @@
     "@hugeicons/core-free-icons": "^4.3.5",
     "motion": "^14.1.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
