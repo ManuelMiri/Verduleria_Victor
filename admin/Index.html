@@ -239,32 +239,81 @@
   const porFila = fila => datos.productos.find(p => p.fila === Number(fila));
 
   // ---- cambios rápidos desde la lista ----
-  $('#lista').addEventListener('change', async e => {
-    const el = e.target;
+  // Antes guardaba en cada cambio: con las flechitas del número salían 5 o 6 guardados seguidos,
+  // se quedaban esperando el bloqueo de la planilla y Google cortaba con error. Ahora:
+  //  - espero a que dejes de tocar el número (700 ms) y guardo solo el último valor
+  //  - los guardados van de a uno, en fila, nunca dos a la vez
+  //  - no vuelvo a dibujar la lista mientras estás escribiendo en un número
+  const pendientes = new Map(); // 'fila|campo' -> { p, campo, valor, el }
+  let esperando = null;
+  let guardando = false;
+
+  function encolar(el) {
     const campo = el.dataset.campo;
     if (!campo) return;
     const p = porFila(el.closest('.prod').dataset.fila);
-    let valor = campo === 'hay' ? (el.checked ? 'Sí' : 'No') : el.value.trim();
-
-    if (campo === 'oferta' && valor !== '' && Number(valor) >= p.precio) {
-      toast('La oferta tiene que ser más barata que el precio', true);
-      el.value = p.oferta;
-      return;
-    }
-
+    const valor = campo === 'hay' ? (el.checked ? 'Sí' : 'No') : el.value.trim();
+    pendientes.set(p.fila + '|' + campo, { p, campo, valor, el });
     el.classList.add('guardando');
-    try {
-      actualizar(await llamar('cambiarCampo', p.fila, p.nombre, campo, valor));
-      toast('Guardado ✓');
-    } catch (err) {
-      toast(errorMsg(err), true);
-      render(); // vuelvo al valor que había
-    }
-  });
+    clearTimeout(esperando);
+    esperando = setTimeout(guardarPendientes, campo === 'hay' ? 150 : 700);
+  }
 
-  // Enter en precio/oferta guarda al tiro
+  async function guardarPendientes() {
+    if (guardando) return; // ya hay uno en curso; cuando termine sigue con estos
+    guardando = true;
+    let errores = 0, guardados = 0;
+    while (pendientes.size) {
+      const [clave, item] = pendientes.entries().next().value;
+      pendientes.delete(clave);
+      const { p, campo, valor, el } = item;
+      if (campo === 'precio' && (valor === '' || !(Number(valor) >= 0))) {
+        toast('El precio tiene que ser un número', true); el.value = p.precio; errores++; continue;
+      }
+      if (campo === 'oferta' && valor !== '' && Number(valor) >= p.precio) {
+        toast('La oferta tiene que ser más barata que el precio', true); el.value = p.oferta; errores++; continue;
+      }
+      try {
+        await llamar('cambiarCampo', p.fila, p.nombre, campo, valor);
+        // actualizo mi copia local en vez de pedir todo de nuevo a la planilla
+        if (campo === 'precio') p.precio = Number(valor);
+        if (campo === 'oferta') p.oferta = valor === '' ? '' : Number(valor);
+        if (campo === 'hay') p.hay = valor;
+        guardados++;
+      } catch (err) {
+        errores++;
+        toast(errorMsg(err), true);
+      }
+      el.classList.remove('guardando');
+    }
+    guardando = false;
+    if (guardados && !errores) toast('Guardado ✓');
+    refrescarSiNoEscribe();
+  }
+
+  // vuelvo a dibujar (para el badge de oferta, los contadores, etc.) solo si no estás
+  // con el cursor en un número, si no se te borraría lo que estás escribiendo
+  function refrescarSiNoEscribe() {
+    const activo = document.activeElement;
+    if (activo && activo.closest && activo.closest('#lista') && activo.dataset.campo) return;
+    if (pendientes.size || guardando) return;
+    render();
+  }
+
+  // 'input' cubre escribir y las flechitas; 'change' cubre el switch de "Hay"
+  $('#lista').addEventListener('input', e => { if (e.target.dataset.campo && e.target.type !== 'checkbox') encolar(e.target); });
+  $('#lista').addEventListener('change', e => { if (e.target.dataset.campo) encolar(e.target); });
+  // cuando sales del número, si ya se guardó todo, actualizo la lista
+  $('#lista').addEventListener('focusout', () => setTimeout(refrescarSiNoEscribe, 50));
+
+  // Enter en precio/oferta: guardo al tiro, sin esperar los 700 ms
   $('#lista').addEventListener('keydown', e => {
-    if (e.key === 'Enter' && e.target.dataset.campo) e.target.blur();
+    if (e.key === 'Enter' && e.target.dataset.campo) {
+      e.preventDefault();
+      clearTimeout(esperando);
+      e.target.blur();
+      guardarPendientes();
+    }
   });
 
   $('#lista').addEventListener('click', async e => {

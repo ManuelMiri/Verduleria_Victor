@@ -100,13 +100,17 @@ function cambiarCampo(fila, nombre, campo, valor) {
   if (campo === 'precio' && (vacio_(valor) || !(Number(valor) >= 0))) throw new Error('El precio tiene que ser un número.');
   if (campo === 'oferta' && !vacio_(valor) && !(Number(valor) >= 0)) throw new Error('La oferta tiene que ser un número.');
 
-  return conLock_(() => {
+  // acá NO devuelvo la lista completa: releer los 75 productos después de cada número hacía
+  // todo lento, y con varios cambios seguidos se acumulaban esperando el bloqueo hasta que
+  // Google cortaba con "se ha superado el tiempo de espera". El panel ya sabe qué cambió
+  conLock_(() => {
     const h = hoja_();
     comprobarFila_(h, fila, nombre);
     const col = COLS.indexOf(campo) + 1;
     const v = campo === 'hay' ? valor : (vacio_(valor) ? '' : Number(valor));
     h.getRange(fila, col).setValue(v);
-  });
+  }, false);
+  return { ok: true };
 }
 
 function eliminarProducto(fila, nombre) {
@@ -162,16 +166,21 @@ function verificarAcceso_() {
 }
 
 // El lock es por si don Vic y alguien más editan al mismo tiempo
-function conLock_(fn) {
+// devolverDatos: si después de guardar le mando al panel la lista completa actualizada.
+// Para los cambios rápidos (precio, oferta, hay) no hace falta y lo hace mucho más rápido
+function conLock_(fn, devolverDatos = true) {
   const lock = LockService.getDocumentLock();
-  lock.waitLock(10000);
+  // espero hasta 30 s (antes 10): si don Vic y alguien más guardan a la vez, se turnan
+  if (!lock.tryLock(30000)) {
+    throw new Error('La planilla está ocupada guardando otro cambio. Espera un momento y prueba de nuevo.');
+  }
   try {
     fn();
     SpreadsheetApp.flush();
   } finally {
     lock.releaseLock();
   }
-  return obtenerDatos(); // devuelvo todo actualizado para refrescar la vista
+  return devolverDatos ? obtenerDatos() : null;
 }
 
 // Antes de tocar una fila reviso que siga siendo el mismo producto,
