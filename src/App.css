@@ -98,7 +98,10 @@ button { cursor: pointer; }
   color: var(--verde); margin: 0;
 }
 /* la parte después de la coma: cursiva, tomate y con un subrayado ondulado como hecho a plumón */
-.hero__titulo .resaltado {
+/* la línea que rota va un poco más chica que "Lo de la feria," para que la frase más
+   larga ("sin cargar las bolsas") quepa en una sola línea, también en el celular */
+.hero__titulo .resaltado { font-size: 0.7em; margin-top: 0.12em; }
+.hero__titulo .resaltado .text-rotate__frase {
   font-style: italic; font-weight: 700; color: var(--tomate);
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 6 Q10 1 20 6 T40 6' fill='none' stroke='%23d9472b' stroke-opacity='.45' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 92% / 0.55em 0.16em;
   padding-bottom: 0.08em;

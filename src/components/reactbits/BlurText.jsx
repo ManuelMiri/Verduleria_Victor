@@ -27,7 +27,9 @@ const BlurText = ({
   onAnimationComplete,
   stepDuration = 0.35,
   // agregado mío: desde qué palabra pinto el texto destacado (ej: lo que va después de la coma)
-  resaltarDesde = -1
+  resaltarDesde = -1,
+  // agregado mío: qué etiqueta usar, para poder meterlo dentro del h1
+  as: Tag = 'p'
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
@@ -74,7 +76,7 @@ const BlurText = ({
   const times = Array.from({ length: stepCount }, (_, i) => (stepCount === 1 ? 0 : i / (stepCount - 1)));
 
   return (
-    <p ref={ref} className={className} style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <Tag ref={ref} className={className} style={{ display: 'flex', flexWrap: 'wrap' }}>
       {elements.map((segment, index) => {
         const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
 
@@ -102,7 +104,7 @@ const BlurText = ({
           </Fragment>
         );
       })}
-    </p>
+    </Tag>
   );
 };
 

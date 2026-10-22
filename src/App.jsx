@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import CircularText from './components/reactbits/CircularText';
 import BlurText from './components/reactbits/BlurText';
+import RotatingText from './components/reactbits/RotatingText';
 import MetaBalls from './components/reactbits/MetaBalls';
 import ClickSpark from './components/reactbits/ClickSpark';
 import { CHISPAS } from './chispas';
@@ -110,16 +111,12 @@ export default function App() {
       <header className="hero">
         <div className="hero__texto">
           <p className="hero__kicker"><span aria-hidden="true">🍅</span> <span className="kicker__rubro">Frutas y verduras · </span>Padre Las Casas, Temuco</p>
-          {/* BlurText de React Bits: el título va apareciendo palabra por palabra */}
-          {/* lo que va después de la coma sale en cursiva, color tomate y subrayado a mano */}
-          <BlurText
-            text={TIENDA.eslogan}
-            delay={120}
-            animateBy="words"
-            direction="top"
-            className="hero__titulo"
-            resaltarDesde={TIENDA.eslogan.split(' ').findIndex((w) => w.endsWith(',')) + 1 || -1}
-          />
+          {/* El título: arriba "Lo de la feria," aparece palabra por palabra (BlurText)
+              y abajo van rotando las frases en cursiva tomate (RotatingText) */}
+          <h1 className="hero__titulo">
+            <BlurText as="span" text={TIENDA.titulo} delay={120} animateBy="words" direction="top" />
+            <RotatingText texts={TIENDA.frases} className="resaltado" rotationInterval={3200} />
+          </h1>
           <p className="hero__bajada">
             Elige lo que necesitas, te armamos el pedido y te lo llevamos a la casa. <strong>Precios del día, pago al recibir.</strong>
           </p>

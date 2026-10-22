@@ -2,7 +2,9 @@
 // solo cambio este archivo y no tengo que andar buscando por todo el código.
 export const TIENDA = {
   nombre: 'FruteriaDonVic',
-  eslogan: 'Lo de la feria, sin ir a la feria',
+  // el título va en dos partes: lo de arriba queda fijo y abajo van rotando las frases
+  titulo: 'Lo de la feria,',
+  frases: ['sin ir a la feria', 'sin cargar las bolsas', 'directo a tu puerta'],
   // número con código de país y sin el "+", así lo pide WhatsApp
   whatsapp: '56937766589',
   direccion: 'Calle Ejemplo 123, Padre Las Casas, Temuco',

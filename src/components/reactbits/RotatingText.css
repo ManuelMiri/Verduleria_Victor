@@ -1,0 +1,20 @@
+/* contenedor: ocupa su propia línea y no cambia de alto entre frases */
+.text-rotate { display: block; position: relative; }
+
+/* texto solo para lectores de pantalla (y para que Google lea la frase) */
+.text-rotate__sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* siempre en una línea: si se partiera, el título saltaría de alto con cada cambio */
+.text-rotate__frase { display: inline-flex; flex-wrap: nowrap; white-space: nowrap; }
+
+/* cada palabra recorta a sus letras: así se ve que entran desde abajo y salen por arriba.
+   El padding es para que no se corte la cursiva ni la cola de la "j" o la "p" */
+.text-rotate__palabra {
+  display: inline-flex; overflow: hidden;
+  padding: 0.04em 0.06em 0.14em; margin: -0.04em -0.06em -0.14em;
+}
+.text-rotate__letra { display: inline-block; }
+.text-rotate__espacio { display: inline-block; width: 0.26em; }
