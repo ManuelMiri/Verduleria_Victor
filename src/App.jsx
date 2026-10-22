@@ -4,6 +4,11 @@ import BlurText from './components/reactbits/BlurText';
 import RotatingText from './components/reactbits/RotatingText';
 import LogoLoop from './components/reactbits/LogoLoop';
 import AnimatedContent from './components/reactbits/AnimatedContent';
+import DepthText from './components/reactbits/DepthText';
+
+// Ajustes comunes de DepthText para los títulos de sección: menos capas y menos profundidad
+// que el ejemplo original, porque acá son títulos chicos y no el texto gigante del demo
+const TITULO_3D = { layers: 14, depth: 1.1, tilt: 7, orbitSpeed: 0.12, fontSize: 'clamp(2rem, 6vw, 2.8rem)', fontWeight: 800, className: 'titulo-3d' };
 import MetaBalls from './components/reactbits/MetaBalls';
 import ClickSpark from './components/reactbits/ClickSpark';
 import { CHISPAS } from './chispas';
@@ -147,7 +152,9 @@ export default function App() {
       {ofertas.length > 0 && (
         <section id="ofertas" className="ofertas">
           <AnimatedContent distance={40}>
-          <h2>Ofertas de hoy</h2>
+          <h2>
+            <DepthText text="Ofertas de hoy" faceColor="#d9472b" depthColor="#7a2412" {...TITULO_3D} />
+          </h2>
           {/* las ofertas pasan en una cinta infinita (LogoLoop): salen por un lado y entran por el otro.
               Se frena cuando pasas el mouse o el dedo, para poder tocar la que quieres */}
           <LogoLoop speed={45} gap={14} ariaLabel="Ofertas de hoy">
@@ -171,7 +178,9 @@ export default function App() {
 
       <main id="catalogo" className="catalogo">
         <AnimatedContent className="catalogo__top" distance={40}>
-          <h2>Catálogo</h2>
+          <h2>
+            <DepthText text="Catálogo" faceColor="#1f4a2c" depthColor="#0c2214" {...TITULO_3D} />
+          </h2>
           <input
             className="buscador"
             type="search"

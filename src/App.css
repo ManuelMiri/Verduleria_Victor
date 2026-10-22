@@ -159,7 +159,10 @@ button { cursor: pointer; }
 
 /* ---------- ofertas ---------- */
 .ofertas { max-width: 1200px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 3rem) 2.5rem; }
-.ofertas h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+.ofertas h2 { font-size: 1.6rem; margin-bottom: 1.1rem; }
+/* títulos 3D (DepthText): el original viene con las letras muy juntas (-0.065em), pensado para
+   letras de palo; con la Fraunces se pegaban, así que les doy un poco más de aire */
+.titulo-3d .depth-text__layer, .titulo-3d .depth-text__face { letter-spacing: -0.015em; line-height: 1; padding: 0.06em 0.04em 0.1em; }
 /* cada oferta de la cinta tiene ancho fijo, así la cinta corre pareja */
 .logoloop .oferta { width: 250px; height: 100%; }
 .logoloop .oferta__chispa { display: block; height: 100%; }
