@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { Fragment, useEffect, useRef, useState, useMemo } from 'react';
 
 const buildKeyframes = (from, steps) => {
   const keys = new Set([...Object.keys(from), ...steps.flatMap(s => Object.keys(s))]);
@@ -25,7 +25,9 @@ const BlurText = ({
   animationTo,
   easing = t => t,
   onAnimationComplete,
-  stepDuration = 0.35
+  stepDuration = 0.35,
+  // agregado mío: desde qué palabra pinto el texto destacado (ej: lo que va después de la coma)
+  resaltarDesde = -1
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
@@ -84,9 +86,11 @@ const BlurText = ({
         spanTransition.ease = easing;
 
         return (
+          <Fragment key={index}>
+          {/* antes de la parte destacada corto la línea, así no queda una palabra suelta arriba */}
+          {index === resaltarDesde && index > 0 && <span className="corte" style={{ flexBasis: '100%', height: 0 }} />}
           <motion.span
-            className="inline-block will-change-[transform,filter,opacity]"
-            key={index}
+            className={`inline-block will-change-[transform,filter,opacity]${resaltarDesde >= 0 && index >= resaltarDesde ? ' resaltado' : ''}`}
             initial={fromSnapshot}
             animate={inView ? animateKeyframes : fromSnapshot}
             transition={spanTransition}
@@ -95,6 +99,7 @@ const BlurText = ({
             {segment === ' ' ? '\u00A0' : segment}
             {animateBy === 'words' && index < elements.length - 1 && '\u00A0'}
           </motion.span>
+          </Fragment>
         );
       })}
     </p>

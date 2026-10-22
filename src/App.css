@@ -21,7 +21,8 @@ body {
   font-family: 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+/* SOFT redondea las puntas de la Fraunces y WONK le da esas letras medio chuecas, que es lo que le da carácter */
+h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 700; margin: 0; letter-spacing: -0.015em; font-variation-settings: 'SOFT' 100, 'WONK' 1; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 
@@ -73,7 +74,7 @@ button { cursor: pointer; }
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--linea);
 }
-.marca { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
+.marca { font-family: 'Fraunces', serif; font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
 
 /* ---------- hero ---------- */
 .hero {
@@ -81,13 +82,28 @@ button { cursor: pointer; }
   padding: clamp(2.5rem, 7vw, 5.5rem) clamp(1rem, 4vw, 3rem) 3rem;
   max-width: 1200px; margin: 0 auto;
 }
-.hero__kicker { text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.78rem; font-weight: 700; color: var(--tomate); margin: 0 0 1rem; }
+.hero__kicker {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.76rem; font-weight: 700;
+  color: var(--tomate); background: #fbe1d6; border-radius: 999px; padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+  margin: 0 0 1.2rem; transform: rotate(-1.5deg);
+}
+/* El título era lo más tímido: ahora va más grueso (800), en el tamaño óptico grande
+   y con las letras blandas y chuecas de la Fraunces */
 .hero__titulo {
-  font-family: 'Fraunces', serif; font-weight: 600;
-  font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: 1.02; letter-spacing: -0.03em;
+  font-family: 'Fraunces', serif; font-weight: 800;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  font-size: clamp(2.9rem, 7.4vw, 5.6rem); line-height: 0.96; letter-spacing: -0.035em;
   color: var(--verde); margin: 0;
 }
-.hero__bajada { font-size: 1.1rem; line-height: 1.55; color: var(--gris); max-width: 32rem; margin: 1.3rem 0 1.8rem; }
+/* la parte después de la coma: cursiva, tomate y con un subrayado ondulado como hecho a plumón */
+.hero__titulo .resaltado {
+  font-style: italic; font-weight: 700; color: var(--tomate);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 6 Q10 1 20 6 T40 6' fill='none' stroke='%23d9472b' stroke-opacity='.45' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 92% / 0.55em 0.16em;
+  padding-bottom: 0.08em;
+}
+.hero__bajada { font-size: 1.15rem; line-height: 1.55; color: var(--gris); max-width: 32rem; margin: 1.4rem 0 1.9rem; }
+.hero__bajada strong { color: var(--tinta); font-weight: 700; }
 .hero__acciones { display: flex; gap: 0.7rem; flex-wrap: wrap; }
 
 /* El sello con el CircularText: piso los estilos que trae por defecto (blanco y 200px) */

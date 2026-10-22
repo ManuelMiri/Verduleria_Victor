@@ -106,11 +106,19 @@ export default function App() {
 
       <header className="hero">
         <div className="hero__texto">
-          <p className="hero__kicker">Frutas y verduras · Talca</p>
+          <p className="hero__kicker"><span aria-hidden="true">🍅</span> Frutas y verduras · Talca</p>
           {/* BlurText de React Bits: el título va apareciendo palabra por palabra */}
-          <BlurText text={TIENDA.eslogan} delay={120} animateBy="words" direction="top" className="hero__titulo" />
+          {/* lo que va después de la coma sale en cursiva, color tomate y subrayado a mano */}
+          <BlurText
+            text={TIENDA.eslogan}
+            delay={120}
+            animateBy="words"
+            direction="top"
+            className="hero__titulo"
+            resaltarDesde={TIENDA.eslogan.split(' ').findIndex((w) => w.endsWith(',')) + 1 || -1}
+          />
           <p className="hero__bajada">
-            Elige lo que necesitas, te armamos el pedido y te lo llevamos a la casa. Precios del día, pago al recibir.
+            Elige lo que necesitas, te armamos el pedido y te lo llevamos a la casa. <strong>Precios del día, pago al recibir.</strong>
           </p>
           <div className="hero__acciones">
             <a href="#catalogo" className="btn btn--primario">Ver productos</a>
