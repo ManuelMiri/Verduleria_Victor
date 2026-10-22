@@ -70,6 +70,9 @@ export default function App() {
   // El animationSize va según el alto de la pantalla, así que en el celular (angosto y alto)
   // las manchas quedaban gigantes y tapaban todo. Ahí uso 20 y en pantallas anchas el 13
   const tamanoManchas = typeof window !== 'undefined' && window.innerWidth < 700 ? 20 : 13;
+  // La mancha verde que sigue al mouse y el "empujón" al hacer clic solo los dejo con mouse.
+  // En el celular cada toque o scroll hacía saltar las manchas y el fondo parecía titilar
+  const conMouse = typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   return (
     <>
@@ -94,6 +97,8 @@ export default function App() {
           speed={0.25}
           cursorBallSize={2}
           enableTransparency
+          enableMouseInteraction={conMouse}
+          clickBurst={conMouse}
           className="fondo__manchas"
         />
       </div>

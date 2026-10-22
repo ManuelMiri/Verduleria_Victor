@@ -1,4 +1,5 @@
 import { Fragment, useId } from 'react';
+import { motion } from 'motion/react';
 import './ElectricBorder.css';
 
 // Mi versión del ElectricBorder de React Bits (https://reactbits.dev/animations/electric-border).
@@ -26,10 +27,14 @@ export default function ElectricBorder({ color = '#5cb83a', speed = 1, chaos = 1
   ];
 
   return (
-    <span
+    // aparece rápido y al soltar se desvanece más lento (va dentro de un AnimatePresence)
+    <motion.span
       className="eb"
       aria-hidden="true"
       style={{ '--eb-color': color, '--eb-r': `${radius}px`, '--eb-t': `${thickness}px` }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.15 } }}
+      exit={{ opacity: 0, transition: { duration: 0.6, ease: 'easeOut' } }}
     >
       <svg className="eb__svg" focusable="false">
         <defs>
@@ -58,6 +63,6 @@ export default function ElectricBorder({ color = '#5cb83a', speed = 1, chaos = 1
       <span className="eb__trazo" style={{ filter: `url(#${id})` }} />
       <span className="eb__brillo eb__brillo--1" />
       <span className="eb__brillo eb__brillo--2" />
-    </span>
+    </motion.span>
   );
 }

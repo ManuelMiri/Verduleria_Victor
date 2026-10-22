@@ -33,7 +33,11 @@ button { cursor: pointer; }
    Lo dejo fijo y del tamaño de la pantalla, así las manchas siempre se ven detrás
    mientras bajas por el catálogo. pointer-events: none para que no tape ningún botón
    (igual sigue al mouse, porque MetaBalls escucha el mouse en toda la ventana) */
-.fondo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.fondo { position: fixed; top: 0; left: 0; right: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  /* alto fijo al de la pantalla con la barra del navegador escondida (lvh). Con inset: 0 el
+     fondo cambiaba de alto cada vez que la barra aparecía o se escondía al hacer scroll en el
+     celular, y las manchas se re-escalaban de golpe: eso era el "titileo" */
+  height: 100vh; height: 100lvh; }
 /* el zoom: agrando el lienzo un 20% desde el centro y lo que sobra se recorta,
    así las manchas se ven más grandes y más cerca */
 .fondo__manchas { transform: scale(1.2); transform-origin: center; }

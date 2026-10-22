@@ -2,7 +2,6 @@
 .eb {
   position: absolute; inset: -2px; border-radius: var(--eb-r);
   pointer-events: none; z-index: 4;
-  animation: eb-aparece 0.25s ease-out;
 }
 .eb__svg { position: absolute; width: 0; height: 0; overflow: hidden; }
 .eb__trazo, .eb__brillo { position: absolute; inset: 0; border-radius: inherit; }
@@ -14,4 +13,3 @@
   border: var(--eb-t) solid var(--eb-color); filter: blur(5px); opacity: 0.8;
   box-shadow: 0 0 22px -4px var(--eb-color);
 }
-@keyframes eb-aparece { from { opacity: 0; } to { opacity: 1; } }

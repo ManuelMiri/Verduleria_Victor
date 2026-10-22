@@ -266,11 +266,15 @@ const MetaBalls = ({
     let raf = 0;
     let last = 0;
     let dirty = true;
+    let ready = false; // agregado mío: recién cuando ya existe draw() dejo que resize() dibuje
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
       const s = settingsRef.current;
       const ratio = Math.max(0.5, Math.min(s.dpr ?? window.devicePixelRatio ?? 1, 2));
+      // agregado mío: si el tamaño no cambió de verdad, no toco el lienzo. Cambiar canvas.width
+      // lo borra entero, y eso en el celular se veía como un parpadeo del fondo
+      if (Math.round(rect.width) === Math.round(view.width) && Math.round(rect.height) === Math.round(view.height) && ratio === view.ratio) return;
       view.width = Math.max(1, rect.width);
       view.height = Math.max(1, rect.height);
       view.ratio = ratio;
@@ -278,6 +282,8 @@ const MetaBalls = ({
       canvas.height = Math.max(1, Math.round(view.height * ratio));
       gl.viewport(0, 0, canvas.width, canvas.height);
       dirty = true;
+      // dibujo al tiro (si ya está todo listo) para que no quede un cuadro vacío hasta el próximo frame
+      if (ready) draw();
     };
 
     const toWorld = (clientX, clientY) => {
@@ -580,6 +586,7 @@ const MetaBalls = ({
     window.addEventListener('pointerup', onLift);
     window.addEventListener('pointercancel', onLift);
 
+    ready = true;
     resize();
     start();
     engineRef.current = {
