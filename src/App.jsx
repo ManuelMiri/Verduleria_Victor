@@ -106,7 +106,7 @@ export default function App() {
 
       <header className="hero">
         <div className="hero__texto">
-          <p className="hero__kicker"><span aria-hidden="true">🍅</span> Frutas y verduras · Talca</p>
+          <p className="hero__kicker"><span aria-hidden="true">🍅</span> <span className="kicker__rubro">Frutas y verduras · </span>Padre Las Casas, Temuco</p>
           {/* BlurText de React Bits: el título va apareciendo palabra por palabra */}
           {/* lo que va después de la coma sale en cursiva, color tomate y subrayado a mano */}
           <BlurText

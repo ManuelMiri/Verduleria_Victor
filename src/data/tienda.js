@@ -5,7 +5,7 @@ export const TIENDA = {
   eslogan: 'Lo de la feria, sin ir a la feria',
   // número con código de país y sin el "+", así lo pide WhatsApp
   whatsapp: '56937766589',
-  direccion: 'Calle Ejemplo 123, Talca',
+  direccion: 'Calle Ejemplo 123, Padre Las Casas, Temuco',
   horario: 'Lun a Sáb · 8:30 a 20:00',
   instagram: 'verduleria.elhuerto',
   pedidoMinimo: 8000,

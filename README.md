@@ -1,6 +1,6 @@
 # Frutería don Vic
 
-Catálogo web con pedido por WhatsApp para una frutería de barrio en Talca. El dueño actualiza precios, ofertas y stock desde el celular, sin tocar código.
+Catálogo web con pedido por WhatsApp para una frutería de barrio en Padre Las Casas, Temuco. El dueño actualiza precios, ofertas y stock desde el celular, sin tocar código.
 
 ## Qué hace
 

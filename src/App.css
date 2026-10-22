@@ -312,6 +312,9 @@ button { cursor: pointer; }
 @media (max-width: 760px) {
   .hero { grid-template-columns: 1fr; text-align: left; }
   .sello { order: -1; }
+  /* con "Padre Las Casas, Temuco" el sticker quedaba en dos líneas en el celular,
+     así que en pantallas chicas dejo solo la ubicación (el título ya dice que es feria) */
+  .kicker__rubro { display: none; }
   .sello::before, .circular-text.sello__texto { width: 200px; height: 200px; }
   .circular-text.sello__texto span { font-size: 14px; }
   .sello__centro { width: 115px; height: 115px; }
