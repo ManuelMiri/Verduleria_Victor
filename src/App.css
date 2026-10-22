@@ -91,6 +91,9 @@ button { cursor: pointer; }
 .marca { display: inline-flex; align-items: center; gap: 0.55rem; font-family: 'Fraunces', serif; font-weight: 800; font-variation-settings: 'SOFT' 100, 'WONK' 1; font-size: 1.15rem; color: var(--verde); text-decoration: none; }
 /* que la barra fija no tape el título de la sección al llegar con el menú */
 #catalogo, #ofertas, #contacto { scroll-margin-top: 84px; }
+.nav__menu { --gn-font: 15px; --gn-x: 15px; --gn-y: 8px; }
+/* letras del menú más gruesas: las del original (500) se perdían sobre el crema */
+.nav__menu .gooey-nav__link { font-weight: 700; letter-spacing: 0.005em; }
 .nav__menu .burbuja { display: inline-grid; margin-left: 0.4rem; min-width: 1.25rem; height: 1.25rem; font-size: 0.72rem; }
 .marca__logo { height: 44px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(31, 74, 44, 0.18)); }
 
@@ -384,6 +387,10 @@ button { cursor: pointer; }
   .kicker__rubro { display: none; }
   /* en el celular el menú necesita el espacio: dejo solo el logo, que igual lleva el nombre */
   .marca__nombre { display: none; }
+  .nav__menu { --gn-font: 14px; --gn-x: 11px; --gn-y: 8px; }
+  /* el menú siempre en una sola fila; en teléfonos angostos achico un poco letra y espacios */
+  .nav__menu .gooey-nav__list { flex-wrap: nowrap; }
+  .nav { gap: 0.5rem; }
   .nav { padding: 0.55rem 0.75rem; }
   .marca__logo { height: 40px; }
   /* en el celular el recuadro usa todo el ancho que tiene: la frase más larga ocupa ~8,4 em */
@@ -426,4 +433,11 @@ button { cursor: pointer; }
 @keyframes nota-entra { from { opacity: 0; } to { opacity: 1; } }
 @keyframes nota-tirada {
   to { transform: translate(60%, -80%) rotate(260deg) scale(0.25); opacity: 0; }
+}
+
+/* teléfonos angostos (360px): el menú necesita un poco menos de letra y espacio para caber en una fila */
+@media (max-width: 380px) {
+  .nav__menu { --gn-font: 13px; --gn-x: 9px; --gn-pad: 4px; --gn-gap: 2px; }
+  .nav__menu .burbuja { margin-left: 0.25rem; min-width: 1.1rem; height: 1.1rem; font-size: 0.66rem; }
+  .marca__logo { height: 36px; }
 }

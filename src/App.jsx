@@ -141,10 +141,12 @@ export default function App() {
           activeTextColor="#fffdf8"
           colors={['#d9472b', '#5cb83a', '#f3c9a3']}
           particleCount={12}
-          activeIndex={abierto ? 2 : seccion}
+          animationTime={450}
+          activeIndex={seccion}
           // Catálogo y Contacto son links normales (#catalogo, #contacto) y el scroll suave lo hace
-          // el CSS; acá solo abro el carrito cuando tocan Mi pedido
-          onChange={(i) => i === 2 && setAbierto(true)}
+          // el CSS. La gota la muevo al tiro al tocar (antes esperaba a que terminara el scroll).
+          // Mi pedido no mueve la gota: abre el carrito, que igual tapa el menú
+          onChange={(i) => (i === 2 ? setAbierto(true) : setSeccion(i))}
           items={[
             { label: 'Catálogo', href: '#catalogo' },
             { label: 'Contacto', href: '#contacto' },
