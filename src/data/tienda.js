@@ -1,10 +1,10 @@
 // Aquí dejo todos los datos del negocio juntos, así cuando hable con el dueño
 // solo cambio este archivo y no tengo que andar buscando por todo el código.
 export const TIENDA = {
-  nombre: 'Verdulería El Huerto',
+  nombre: 'FruteriaDonVic',
   eslogan: 'Lo de la feria, sin ir a la feria',
   // número con código de país y sin el "+", así lo pide WhatsApp
-  whatsapp: '56912345678',
+  whatsapp: '56937766589',
   direccion: 'Calle Ejemplo 123, Talca',
   horario: 'Lun a Sáb · 8:30 a 20:00',
   instagram: 'verduleria.elhuerto',
