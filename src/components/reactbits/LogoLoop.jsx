@@ -134,9 +134,10 @@ export default function LogoLoop({ children, speed = 45, gap = 14, pauseOnHover 
             key={c}
             ref={c === 0 ? secuencia : undefined}
             className="logoloop__lista"
-            // las copias son solo visuales: los lectores de pantalla y el teclado ven una sola vez cada oferta
+            // las copias las oculto a los lectores de pantalla (así cada oferta se lee una sola vez),
+            // pero NO les pongo "inert": eso también bloquea los toques, y como la cinta va
+            // corriendo, la mayoría de las veces lo que tocas es una copia
             aria-hidden={c > 0 ? true : undefined}
-            inert={c > 0 ? true : undefined}
           >
             {items.map((item, i) => (
               <li key={i} className="logoloop__item">{item}</li>
