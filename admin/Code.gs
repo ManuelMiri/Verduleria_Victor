@@ -118,6 +118,33 @@ function eliminarProducto(fila, nombre) {
   });
 }
 
+// ---------- fotos ----------
+
+const CARPETA_FOTOS = 'Fotos Frutería don Vic';
+
+// Recibo la foto ya achicada desde el celular (en base64), la guardo en una carpeta del
+// Drive de quien la sube y la dejo como "cualquiera con el enlace puede ver", porque si no
+// la página pública no la puede mostrar. Devuelvo el link que va en la columna Foto.
+function subirFoto(nombre, tipo, base64) {
+  verificarAcceso_();
+  if (!/^image\/(jpeg|png|webp)$/.test(tipo)) throw new Error('Solo se pueden subir fotos (jpg, png o webp).');
+  const bytes = Utilities.base64Decode(base64);
+  if (bytes.length > 5 * 1024 * 1024) throw new Error('La foto es muy pesada, prueba con otra.');
+
+  const carpetas = DriveApp.getFoldersByName(CARPETA_FOTOS);
+  const carpeta = carpetas.hasNext() ? carpetas.next() : DriveApp.createFolder(CARPETA_FOTOS);
+
+  const limpio = String(nombre || 'producto').toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi, '-').slice(0, 40);
+  const archivo = carpeta.createFile(Utilities.newBlob(bytes, tipo, limpio + '-' + Date.now() + '.jpg'));
+  try {
+    archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (e) {
+    // en algunas cuentas de empresa no dejan compartir público; aviso en vez de fallar callado
+    throw new Error('Se subió la foto pero tu cuenta no deja compartirla públicamente, así que la página no la va a poder mostrar.');
+  }
+  return 'https://drive.google.com/file/d/' + archivo.getId() + '/view';
+}
+
 // ---------- utilidades ----------
 
 function hoja_() {

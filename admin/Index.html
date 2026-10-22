@@ -80,7 +80,9 @@
   form label { display: flex; flex-direction: column; font-size: 12px; color: var(--suave); gap: 4px; min-width: 0; }
   form input, form select, form textarea { width: 100%; min-width: 0; padding: 9px 10px; border: 1px solid var(--borde); border-radius: 8px; font: inherit; font-size: 16px; color: var(--texto); background: #fff; }
   form textarea { resize: vertical; min-height: 54px; }
-  .preview { display: flex; gap: 10px; align-items: center; }
+  .preview { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .subir { display: inline-block; padding: 9px 12px; border-radius: 8px; border: 1px dashed var(--verde); color: var(--verde); font-size: 14px; cursor: pointer; background: var(--verde-claro); }
+  .subir input { display: none; }
   .preview .img { width: 72px; height: 72px; }
   .pie { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
 
@@ -127,10 +129,12 @@
     <label>Ideal para<input name="ideal"></label>
     <label>Cómo guardar<input name="guardar"></label>
     <div class="grid2">
-      <label>Foto (ID de Unsplash, link de Drive o URL)<input name="foto" id="inFoto"></label>
+      <label>Foto (se llena sola al subir, o pega un link)<input name="foto" id="inFoto"></label>
       <label>Emoji<input name="emoji" id="inEmoji" maxlength="4"></label>
     </div>
-    <div class="preview"><div class="img" id="prevImg"></div><small id="prevTxt" style="color:var(--suave)">Vista previa de la foto</small></div>
+    <div class="preview"><div class="img" id="prevImg"></div>
+      <label class="subir">📷 Subir foto<input type="file" accept="image/*" id="inArchivo"></label>
+      <small id="prevTxt" style="color:var(--suave)"></small></div>
     <div class="pie">
       <button type="button" class="btn" id="btnCancelar">Cancelar</button>
       <button type="submit" class="btn prim" id="btnGuardar">Guardar</button>
@@ -303,6 +307,7 @@
     if (p) ['nombre', 'precio', 'oferta', 'nota', 'descripcion', 'ideal', 'guardar', 'foto', 'emoji']
       .forEach(k => f.elements[k].value = p[k] ?? '');
     previewFoto();
+    $('#prevTxt').textContent = '';
     $('#modal').showModal();
   }
 
@@ -311,6 +316,48 @@
     $('#prevImg').innerHTML = imgHtml(p, 144);
   }
   $('#inFoto').addEventListener('input', previewFoto);
+
+  // Las fotos del celular pesan 3-5 MB, así que antes de mandarlas las achico en un canvas
+  // a 1000px por lado como máximo y las paso a JPG. Quedan en ~150 KB y suben rápido con 4G
+  function achicarFoto(archivo, max = 1000) {
+    return new Promise((ok, mal) => {
+      const img = new Image();
+      img.onload = () => {
+        const escala = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * escala);
+        c.height = Math.round(img.height * escala);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(img.src);
+        ok(c.toDataURL('image/jpeg', 0.82).split(',')[1]);
+      };
+      img.onerror = () => mal(new Error('No pude leer esa imagen. Prueba con otra o saca la foto de nuevo.'));
+      img.src = URL.createObjectURL(archivo);
+    });
+  }
+
+  $('#inArchivo').addEventListener('change', async e => {
+    const archivo = e.target.files[0];
+    e.target.value = ''; // así puedo elegir la misma foto otra vez si falla
+    if (!archivo) return;
+    const txt = $('#prevTxt');
+    const btnGuardar = $('#btnGuardar');
+    btnGuardar.disabled = true; // no dejo guardar el producto hasta que termine de subir
+    txt.textContent = 'Subiendo foto…';
+    try {
+      const base64 = await achicarFoto(archivo);
+      const nombre = $('#form').elements.nombre.value || 'producto';
+      const link = await llamar('subirFoto', nombre, 'image/jpeg', base64);
+      $('#inFoto').value = link;
+      previewFoto();
+      txt.textContent = 'Foto lista ✓ Recuerda tocar Guardar';
+    } catch (err) {
+      txt.textContent = '';
+      toast(errorMsg(err), true);
+    } finally {
+      btnGuardar.disabled = false;
+    }
+  });
   $('#inEmoji').addEventListener('input', previewFoto);
 
   $('#btnNuevo').addEventListener('click', () => abrirForm(null));

@@ -83,7 +83,7 @@ export const PRODUCTOS = [
     descripcion: "Papa nueva de consumo, de cáscara delgada.", idealPara: "Puré, papas fritas y al horno", guardar: "En lugar oscuro y seco, lejos de la cebolla" },
   { id: 35, nombre: "Papas cazueleras nuevas", categoria: "Verduras", unidad: "kg", precio: 1200, hayHoy: true, foto: "photo-1518977676601-b53f82aba655", emoji: "🥔",
     descripcion: "Papa nueva chica, para cocer entera.", idealPara: "Cazuela y papas cocidas", guardar: "En lugar oscuro y seco, lejos de la cebolla" },
-  { id: 36, nombre: "Papas consumo lavadas", categoria: "Verduras", unidad: "kg", precio: 1500, nota: "Papa vieja (de guarda)", hayHoy: true, foto: "photo-1518977676601-b53f82aba655", emoji: "🥔",
+  { id: 36, nombre: "Papa vieja", categoria: "Verduras", unidad: "kg", precio: 1500, nota: "De guarda, lavada", hayHoy: true, foto: "photo-1518977676601-b53f82aba655", emoji: "🥔",
     descripcion: "Papa de guarda, lavada y lista para usar.", idealPara: "Puré y papas fritas", guardar: "En lugar oscuro y seco, lejos de la cebolla" },
   { id: 37, nombre: "Cebolla", categoria: "Verduras", unidad: "kg", precio: 1800, hayHoy: true, foto: "photo-1618512496248-a07fe83aa8cb", emoji: "🧅",
     descripcion: "Cebolla firme y de capas apretadas.", idealPara: "Sofrito, pebre y ensalada a la chilena", guardar: "En un canasto ventilado, nunca en bolsa" },
