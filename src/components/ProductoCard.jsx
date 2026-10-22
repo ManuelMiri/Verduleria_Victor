@@ -2,7 +2,7 @@ import FlipCard from './reactbits/FlipCard';
 import ClickSpark from './reactbits/ClickSpark';
 import { CHISPAS } from '../chispas';
 import Foto from './Foto';
-import { clp, etiquetaUnidad, paso, precioFinal, textoCantidad } from '../utils';
+import { clp, etiqueta, paso, precioFinal, textoCantidad } from '../utils';
 
 // El FlipCard se da vuelta con cualquier click o tecla dentro de la tarjeta. Como adelante
 // están los botones de agregar, corto esos eventos aquí para que no lleguen a la tarjeta.
@@ -29,7 +29,7 @@ export default function ProductoCard({ producto, cantidad, onCambiar }) {
       <p className="producto__precio">
         {oferta && <s>{clp(precio)}</s>}
         <strong>{clp(precioFinal(producto))}</strong>
-        <span> / {etiquetaUnidad[unidad]}</span>
+        <span> / {etiqueta(unidad)}</span>
       </p>
 
       {/* si no hay hoy, no dejo agregarlo; dejo un texto para que igual puedan ver la descripción */}
