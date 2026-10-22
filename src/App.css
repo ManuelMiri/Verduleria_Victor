@@ -110,18 +110,25 @@ button { cursor: pointer; }
 /* El sello con el CircularText: piso los estilos que trae por defecto (blanco y 200px) */
 .sello { position: relative; display: grid; place-items: center; }
 .sello::before {
-  content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%;
+  content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%;
   background: radial-gradient(circle, #f3c9a3 0%, #f0dcc0 55%, transparent 72%);
 }
-.circular-text.sello__texto { width: 260px; height: 260px; color: var(--verde); }
-.circular-text.sello__texto span { font-size: 17px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em; }
+/* lo agrandé para que el logo se luzca: el anillo de texto crece junto con el círculo */
+.circular-text.sello__texto { width: 400px; height: 400px; color: var(--verde); }
+.circular-text.sello__texto span { font-size: 22px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em; }
 /* el logo al centro del CircularText: un círculo crema y el logo adentro sin recortarlo */
 .sello__centro {
-  position: absolute; width: 168px; height: 168px; border-radius: 50%;
+  position: absolute; width: 290px; height: 290px; border-radius: 50%;
   background: var(--papel); display: grid; place-items: center; pointer-events: none;
   box-shadow: 0 10px 30px -12px rgba(31, 74, 44, 0.45);
 }
-.sello__centro img { width: 82%; height: 82%; object-fit: contain; }
+.sello__centro img { width: 86%; height: 86%; object-fit: contain; }
+/* en pantallas medianas (notebook chico, tablet acostada) lo achico un poco para que no tape el título */
+@media (max-width: 1100px) {
+  .sello::before, .circular-text.sello__texto { width: 340px; height: 340px; }
+  .circular-text.sello__texto span { font-size: 19px; }
+  .sello__centro { width: 245px; height: 245px; }
+}
 
 /* ---------- ofertas ---------- */
 .ofertas { max-width: 1200px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 3rem) 2.5rem; }
@@ -317,9 +324,9 @@ button { cursor: pointer; }
   /* con "Padre Las Casas, Temuco" el sticker quedaba en dos líneas en el celular,
      así que en pantallas chicas dejo solo la ubicación (el título ya dice que es feria) */
   .kicker__rubro { display: none; }
-  .sello::before, .circular-text.sello__texto { width: 200px; height: 200px; }
-  .circular-text.sello__texto span { font-size: 14px; }
-  .sello__centro { width: 128px; height: 128px; }
+  .sello::before, .circular-text.sello__texto { width: 300px; height: 300px; }
+  .circular-text.sello__texto span { font-size: 17px; }
+  .sello__centro { width: 215px; height: 215px; }
   .grilla, .ofertas__fila { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
   .producto__foto { height: 105px; width: calc(100% + 1.8rem); margin: -0.9rem -0.9rem 0.5rem; }
   /* en el celular las columnas son angostas, así que le doy un poco más de alto para el reverso */
