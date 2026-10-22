@@ -141,8 +141,13 @@ export default function App() {
             <RotatingText texts={TIENDA.frases} className="resaltado" rotationInterval={3200} />
           </h1>
           <p className="hero__bajada">
-            Elige lo que necesitas, te armamos el pedido y te lo llevamos a la casa. <strong>Precios del día, pago al recibir.</strong>
+            Elige lo que necesitas, te armamos el pedido y te lo llevamos a la casa.
           </p>
+          {/* los dos beneficios como etiquetas, para que se noten sin competir con el título */}
+          <ul className="hero__beneficios">
+            <li><span aria-hidden="true">🕐</span> Precios del día</li>
+            <li><span aria-hidden="true">💵</span> Pago al recibir</li>
+          </ul>
           <div className="hero__acciones">
             <a href="#catalogo" className="btn btn--primario">Ver productos</a>
             <a href="#ofertas" className="btn btn--fantasma">Ofertas de hoy</a>

@@ -136,8 +136,22 @@ button { cursor: pointer; }
   font-style: italic; font-weight: 700; color: var(--papel);
   padding: 0.06em 0.32em 0.14em;
 }
-.hero__bajada { font-size: 1.15rem; line-height: 1.55; color: var(--gris); max-width: 32rem; margin: 1.4rem 0 1.9rem; }
-.hero__bajada strong { color: var(--tinta); font-weight: 700; }
+.hero__bajada {
+  /* texto secundario: más oscuro que el gris de antes (que se perdía sobre el crema),
+     con una barra verde que lo ancla al título */
+  font-size: 1.2rem; line-height: 1.5; color: #4a463d; font-weight: 500;
+  max-width: 30rem; margin: 1.5rem 0 0.9rem;
+  padding-left: 0.9rem; border-left: 3px solid var(--hoja);
+}
+/* "Precios del día" y "Pago al recibir" como etiquetas tipo sticker, igual que la de arriba */
+.hero__beneficios { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0 0 1.9rem; }
+.hero__beneficios li {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.92rem; font-weight: 700; color: var(--verde);
+  background: #e3eedb; border: 1px solid #c9dcbd; border-radius: 999px; padding: 0.38rem 0.85rem;
+}
+.hero__beneficios li:nth-child(2) { transform: rotate(1deg); }
+.hero__beneficios li:nth-child(1) { transform: rotate(-1deg); }
 .hero__acciones { display: flex; gap: 0.7rem; flex-wrap: wrap; }
 
 /* El sello con el CircularText: piso los estilos que trae por defecto (blanco y 200px) */
