@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CATEGORIAS, PRODUCTOS } from './productos';
+import { fotoDeRespaldo } from './fotos';
 
 // Ahora los productos salen de la planilla de Google que edita don Vic (o desde el panel admin).
 // La leo con el endpoint "gviz" de Google Sheets, que devuelve la hoja en JSON y deja leerla
@@ -27,7 +28,7 @@ const slug = (t) => limpiar(t).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
 // Los de productos.js quedan de respaldo. Les cambio el id al mismo formato de la planilla,
 // así el carrito no se descuadra si un día carga uno y otro día el otro
-const LOCALES = PRODUCTOS.map((p) => ({ ...p, id: slug(p.nombre) }));
+const LOCALES = PRODUCTOS.map((p) => ({ ...p, id: slug(p.nombre), foto: p.foto || fotoDeRespaldo(slug(p.nombre)) }));
 
 // Por si algún precio quedó escrito como texto tipo "$1.490"
 const numero = (v) => {
@@ -60,7 +61,8 @@ function filaAProducto(celdas) {
     descripcion: texto(7),
     idealPara: texto(8),
     guardar: texto(9),
-    foto: texto(10),
+    // si en la planilla no pusieron foto, uso una de respaldo según el nombre (ver fotos.js)
+    foto: texto(10) || fotoDeRespaldo(slug(nombre)),
     emoji: texto(11) || '🥬',
   };
 }
