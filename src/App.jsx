@@ -121,7 +121,7 @@ export default function App() {
           {/* El título: arriba "Lo de la feria," aparece palabra por palabra (BlurText)
               y abajo van rotando las frases en cursiva tomate (RotatingText) */}
           <h1 className="hero__titulo">
-            <BlurText as="span" text={TIENDA.titulo} delay={120} animateBy="words" direction="top" />
+            <BlurText as="span" className="hero__linea" text={TIENDA.titulo} delay={120} animateBy="words" direction="top" />
             <RotatingText texts={TIENDA.frases} className="resaltado" rotationInterval={3200} />
           </h1>
           <p className="hero__bajada">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import './RotatingText.css';
 
@@ -22,12 +22,33 @@ export default function RotatingText({
     return () => clearInterval(id);
   }, [texts.length, rotationInterval, sinMovimiento]);
 
+  // Mido el ancho de la frase que está en pantalla y animo el ancho del contenedor hacia ese
+  // valor: así, si el contenedor tiene fondo (el recuadro tomate), se estira o encoge suave
+  // con cada frase, igual que en el ejemplo de React Bits. Uso ResizeObserver porque el ancho
+  // real recién se sabe cuando carga la fuente
+  const [ancho, setAncho] = useState(null);
+  const observador = useRef(null);
+  const medir = useCallback((el) => {
+    observador.current?.disconnect();
+    if (!el) return;
+    const actualizar = () => setAncho(el.offsetWidth);
+    actualizar();
+    observador.current = new ResizeObserver(actualizar);
+    observador.current.observe(el);
+  }, []);
+  useEffect(() => () => observador.current?.disconnect(), []);
+
   const frase = texts[indice];
   const palabras = frase.split(' ');
   let letraGlobal = 0; // lo uso para que el retraso siga corriendo entre palabras
 
   return (
-    <span className={`text-rotate ${className}`}>
+    <motion.span
+      className={`text-rotate ${className}`}
+      initial={false}
+      animate={ancho != null ? { width: ancho } : undefined}
+      transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+    >
       {/* para lectores de pantalla y Google dejo la frase completa en texto normal */}
       <span className="text-rotate__sr">{frase}</span>
       <AnimatePresence mode="wait" initial={false}>
@@ -35,6 +56,7 @@ export default function RotatingText({
             el subrayado solo mientras cambia */}
         <motion.span
           key={indice}
+          ref={medir}
           className="text-rotate__frase"
           aria-hidden="true"
           exit={{ opacity: 0, transition: { duration: 0.22, ease: 'easeIn' } }}
@@ -62,6 +84,6 @@ export default function RotatingText({
           ))}
         </motion.span>
       </AnimatePresence>
-    </span>
+    </motion.span>
   );
 }

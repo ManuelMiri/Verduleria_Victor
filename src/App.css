@@ -111,14 +111,24 @@ button { cursor: pointer; }
   font-size: clamp(2.9rem, 7.4vw, 5.6rem); line-height: 0.96; letter-spacing: -0.035em;
   color: var(--verde); margin: 0;
 }
-/* la parte después de la coma: cursiva, tomate y con un subrayado ondulado como hecho a plumón */
-/* la línea que rota va un poco más chica que "Lo de la feria," para que la frase más
-   larga ("sin cargar las bolsas") quepa en una sola línea, también en el celular */
-.hero__titulo .resaltado { font-size: 0.7em; margin-top: 0.12em; }
+/* Tamaños al revés: "Lo de la feria," va más chico y la frase que cambia más grande y dentro
+   de un recuadro tomate, así lo que se mueve es lo que más llama la atención */
+.hero__titulo .hero__linea { font-size: 0.56em; letter-spacing: -0.015em; column-gap: 0.12em; }
+/* el recuadro: el ancho lo anima RotatingText según el largo de cada frase.
+   El tamaño es el menor entre 0.64em y lo que deja el ancho de la pantalla, para que
+   "sin cargar las bolsas" (la más larga) siempre quepa en una línea, también en el celular */
+.hero__titulo .resaltado {
+  display: inline-flex; overflow: hidden; vertical-align: top;
+  font-size: min(0.68em, calc((100vw - 48px) / 8.8));
+  margin-top: 0.2em;
+  background: var(--tomate); border-radius: 0.22em;
+  transform: rotate(-1.5deg); transform-origin: left center;
+  /* sombra dura abajo como de sticker, más un resplandor suave */
+  box-shadow: 0 0.09em 0 #a8331c, 0 14px 28px -12px rgba(217, 71, 43, 0.65);
+}
 .hero__titulo .resaltado .text-rotate__frase {
-  font-style: italic; font-weight: 700; color: var(--tomate);
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 6 Q10 1 20 6 T40 6' fill='none' stroke='%23d9472b' stroke-opacity='.45' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 92% / 0.55em 0.16em;
-  padding-bottom: 0.08em;
+  font-style: italic; font-weight: 700; color: var(--papel);
+  padding: 0.06em 0.32em 0.14em;
 }
 .hero__bajada { font-size: 1.15rem; line-height: 1.55; color: var(--gris); max-width: 32rem; margin: 1.4rem 0 1.9rem; }
 .hero__bajada strong { color: var(--tinta); font-weight: 700; }
@@ -346,6 +356,8 @@ button { cursor: pointer; }
   /* con "Padre Las Casas, Temuco" el sticker quedaba en dos líneas en el celular,
      así que en pantallas chicas dejo solo la ubicación (el título ya dice que es feria) */
   .kicker__rubro { display: none; }
+  /* en el celular el recuadro usa todo el ancho que tiene: la frase más larga ocupa ~8,4 em */
+  .hero__titulo .resaltado { font-size: calc((100vw - 48px) / 8.8); }
   /* 300px, pero nunca más ancho que la pantalla menos un margen: en teléfonos angostos
      (360px) las letras que giran se salían por los lados */
   .sello { --sello: min(300px, calc(100vw - 72px)); }
