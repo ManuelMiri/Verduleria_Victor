@@ -134,7 +134,7 @@ export default function App() {
               depth={1.3}
               tilt={7}
               orbitSpeed={0.12}
-              fontSize="0.56em"
+              fontSize="var(--feria-size)"
               fontWeight={800}
               className="titulo-3d hero__linea-3d"
             />

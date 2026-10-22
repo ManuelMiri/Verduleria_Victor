@@ -115,6 +115,9 @@ button { cursor: pointer; }
    de un recuadro tomate, así lo que se mueve es lo que más llama la atención */
 /* "Lo de la feria," en 3D: en su propia línea (DepthText viene como inline-block) */
 .hero__titulo .hero__linea-3d { display: block; width: fit-content; line-height: 0; }
+/* tamaño de "Lo de la feria,": en computador casi el del título completo; en el celular,
+   lo más grande que quepa en el ancho de la pantalla (ver media query de abajo) */
+.hero__titulo { --feria-size: 0.9em; }
 /* line-height 0: el contenedor tomaba el alto de línea del h1 grande y dejaba un hueco arriba;
    las letras tienen su propio line-height en .titulo-3d */
 /* el recuadro: el ancho lo anima RotatingText según el largo de cada frase.
@@ -364,6 +367,7 @@ button { cursor: pointer; }
   .kicker__rubro { display: none; }
   /* en el celular el recuadro usa todo el ancho que tiene: la frase más larga ocupa ~8,4 em */
   .hero__titulo .resaltado { font-size: calc((100vw - 48px) / 8.8); }
+  .hero__titulo { --feria-size: calc((100vw - 44px) / 5.8); }
   /* 300px, pero nunca más ancho que la pantalla menos un margen: en teléfonos angostos
      (360px) las letras que giran se salían por los lados */
   .sello { --sello: min(300px, calc(100vw - 72px)); }
