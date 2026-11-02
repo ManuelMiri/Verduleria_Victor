@@ -10,6 +10,8 @@ export const TIENDA = {
   direccion: 'Calle Ejemplo 123, Padre Las Casas, Temuco',
   horario: 'Lun a Sáb · 8:30 a 20:00',
   instagram: 'verduleria.elhuerto',
+  // la caja del trabajador (inventario con PIN). Va chiquito en el pie, solo para el equipo
+  caja: 'https://trabajador-donvic.marodriguez-catalan.workers.dev/caja',
   pedidoMinimo: 8000,
   // sectores donde reparte y lo que cobra por cada uno (esto se lo tengo que preguntar)
   sectores: [

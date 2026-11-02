@@ -319,6 +319,8 @@ button { cursor: pointer; }
 .pie strong { color: var(--tinta); font-family: 'Fraunces', serif; font-size: 1.1rem; }
 .pie__links { display: flex; gap: 1.2rem; }
 .pie__links a { color: var(--verde); font-weight: 600; }
+/* el acceso del equipo va discreto: los clientes no lo necesitan */
+.pie__equipo { display: inline-block; margin-top: 0.8rem; font-size: 0.8rem; color: var(--gris); opacity: 0.7; }
 
 /* ---------- botón flotante (más que nada para celular) ---------- */
 .flotante {
