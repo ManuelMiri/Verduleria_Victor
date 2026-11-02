@@ -292,6 +292,7 @@ export default function App() {
           <strong>{TIENDA.nombre}</strong>
           <p>{TIENDA.direccion}</p>
           <p>{TIENDA.horario}</p>
+          <a className="pie__equipo" href={TIENDA.caja} rel="nofollow noreferrer">Acceso equipo</a>
         </div>
         <div className="pie__links">
           <a href={`https://wa.me/${TIENDA.whatsapp}`} target="_blank" rel="noreferrer">WhatsApp</a>
