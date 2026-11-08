@@ -45,6 +45,9 @@ function filaAProducto(celdas) {
 
   const nombre = texto(0);
   if (!nombre) return null; // fila vacía
+  // sin categoría no lo muestro: así un producto que el bot crea desde una factura
+  // no sale a medias en la página hasta que le ponga categoría, texto y emoji
+  if (!texto(1)) return null;
 
   const oferta = numero(v(4));
   const hay = v(5);
